@@ -185,3 +185,33 @@ test "enforces nesting depth" {
     _ => fail("expected DepthLimitExceeded")
   }
 }
+
+///|
+test "reports source positions" {
+  try {
+    @moon-ron.parse("[1,\n@]") |> ignore
+    fail("expected an unexpected-character error")
+  } catch {
+    @moon-ron.UnexpectedChar(position, char) => {
+      assert_eq(position, @moon-ron.RonPosition::{
+        index: 4,
+        line: 2,
+        column: 0,
+      })
+      assert_eq(char, '@')
+    }
+    _ => fail("expected UnexpectedChar")
+  }
+  try {
+    @moon-ron.parse("\"abc") |> ignore
+    fail("expected an end-of-file error")
+  } catch {
+    @moon-ron.UnexpectedEof(position) =>
+      assert_eq(position, @moon-ron.RonPosition::{
+        index: 4,
+        line: 1,
+        column: 4,
+      })
+    _ => fail("expected UnexpectedEof")
+  }
+}
