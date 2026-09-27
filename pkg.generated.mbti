@@ -24,6 +24,8 @@ pub fn struct_fields(RonValue, RonPath) -> Array[(String, RonValue)] raise RonDe
 
 pub fn to_string(RonValue) -> String
 
+pub fn to_string_pretty(RonValue, indent? : Int) -> String
+
 pub fn[T : ToRon] to_value(T) -> RonValue
 
 pub fn tuple_fields(RonValue, RonPath) -> Array[RonValue] raise RonDecodeError
