@@ -1,0 +1,5 @@
+import {
+  "L76148/moon-ron" @ron,
+}
+
+pkgtype(kind: "executable")
