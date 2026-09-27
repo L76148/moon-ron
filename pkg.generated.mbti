@@ -8,17 +8,29 @@ import {
 // Values
 pub fn[T : FromRon] decode(StringView, max_nesting_depth? : Int) -> T raise RonDecodeError
 
+pub fn[T : FromRon] decode_with_options(StringView, options? : RonOptions) -> T raise RonDecodeError
+
 pub fn[T : ToRon] encode(T) -> String
 
-pub fn[T : FromRon] field(Array[(String, RonValue)], String, RonPath) -> T raise RonDecodeError
+pub fn[T : ToRon] encode_with_options(T, options? : RonOptions) -> String
+
+pub fn[T : FromRon] field(Array[(String, RonValue)], String, RonPath, RonOptions) -> T raise RonDecodeError
 
 pub fn field_value(Array[(String, RonValue)], String, RonPath) -> RonValue raise RonDecodeError
 
 pub fn[T : FromRon] from_value(RonValue) -> T raise RonDecodeError
 
+pub fn[T : FromRon] from_value_with_options(RonValue, RonOptions) -> T raise RonDecodeError
+
+pub fn[T : FromRon] newtype(RonValue, RonPath, RonOptions) -> T raise RonDecodeError
+
 pub fn parse(StringView, max_nesting_depth? : Int) -> RonValue raise RonError
 
-pub fn[T : FromRon] positional(Array[RonValue], Int, RonPath) -> T raise RonDecodeError
+pub fn parse_document(StringView, options? : RonOptions) -> RonDocument raise RonError
+
+pub fn[T : FromRon] positional(Array[RonValue], Int, RonPath, RonOptions) -> T raise RonDecodeError
+
+pub fn require_struct_name(RonValue, String, RonPath, RonOptions) -> Unit raise RonDecodeError
 
 pub fn struct_fields(RonValue, RonPath) -> Array[(String, RonValue)] raise RonDecodeError
 
@@ -28,11 +40,15 @@ pub fn to_string_pretty(RonValue, indent? : Int) -> String
 
 pub fn[T : ToRon] to_value(T) -> RonValue
 
+pub fn[T : ToRon] to_value_with_options(T, RonOptions) -> RonValue
+
 pub fn tuple_fields(RonValue, RonPath) -> Array[RonValue] raise RonDecodeError
 
 pub fn valid(StringView) -> Bool
 
 pub fn value_type_name(RonValue) -> String
+
+pub fn[T : FromRon] variant_newtype(RonValue, String, RonPath, RonOptions) -> T raise RonDecodeError
 
 // Errors
 pub(all) suberror RonDecodeError {
@@ -53,6 +69,9 @@ pub(all) suberror RonError {
   InvalidEscape(RonPosition)
   InvalidNumber(RonPosition, String)
   InvalidValue(RonPosition, String)
+  UnknownExtension(RonPosition, String)
+  UnknownAttribute(RonPosition, String)
+  InvalidAttribute(RonPosition, String)
   DepthLimitExceeded(Int)
 } derive(Eq, @debug.Debug)
 pub fn RonError::equal(Self, Self) -> Bool
@@ -60,6 +79,29 @@ pub fn RonError::not_equal(Self, Self) -> Bool
 pub fn RonError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
+pub(all) struct RonDocument {
+  value : RonValue
+  extensions : RonExtensions
+} derive(Eq, @debug.Debug)
+pub fn RonDocument::equal(Self, Self) -> Bool
+pub fn RonDocument::not_equal(Self, Self) -> Bool
+pub fn RonDocument::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RonExtensions {
+  unwrap_newtypes : Bool
+  implicit_some : Bool
+  unwrap_variant_newtypes : Bool
+  explicit_struct_names : Bool
+} derive(Eq, @debug.Debug)
+pub fn RonExtensions::add(Self, Self) -> Self
+pub fn RonExtensions::empty() -> Self
+pub fn RonExtensions::equal(Self, Self) -> Bool
+pub fn RonExtensions::from_name(String) -> Self?
+pub fn RonExtensions::is_empty(Self) -> Bool
+pub fn RonExtensions::not_equal(Self, Self) -> Bool
+pub fn RonExtensions::to_attribute(Self) -> String
+pub fn RonExtensions::to_repr(Self) -> @debug.Repr
+
 pub(all) enum RonNumber {
   Signed(Int64)
   Unsigned(UInt64)
@@ -71,6 +113,18 @@ pub(all) enum RonNumber {
 pub fn RonNumber::equal(Self, Self) -> Bool
 pub fn RonNumber::not_equal(Self, Self) -> Bool
 pub fn RonNumber::to_repr(Self) -> @debug.Repr
+
+pub(all) struct RonOptions {
+  extensions : RonExtensions
+  max_nesting_depth : Int
+} derive(Eq, @debug.Debug)
+pub fn RonOptions::default() -> Self
+pub fn RonOptions::equal(Self, Self) -> Bool
+pub fn RonOptions::not_equal(Self, Self) -> Bool
+pub fn RonOptions::to_repr(Self) -> @debug.Repr
+pub fn RonOptions::with_extension(Self, RonExtensions) -> Self
+pub fn RonOptions::with_extensions(Self, RonExtensions) -> Self
+pub fn RonOptions::with_max_nesting_depth(Self, Int) -> Self
 
 pub(all) enum RonPath {
   Root
@@ -115,10 +169,10 @@ pub(all) enum RonValue {
   Identifier(String)
 } derive(Eq, @debug.Debug)
 pub fn RonValue::equal(Self, Self) -> Bool
-pub fn RonValue::from_ron(Self, RonPath) -> Self raise RonDecodeError
+pub fn RonValue::from_ron(Self, RonPath, RonOptions) -> Self raise RonDecodeError
 pub fn RonValue::not_equal(Self, Self) -> Bool
 pub fn RonValue::to_repr(Self) -> @debug.Repr
-pub fn RonValue::to_ron(Self) -> Self
+pub fn RonValue::to_ron(Self, RonOptions) -> Self
 pub impl FromRon for RonValue
 pub impl ToRon for RonValue
 
@@ -126,7 +180,7 @@ pub impl ToRon for RonValue
 
 // Traits
 pub(open) trait FromRon {
-  fn from_ron(RonValue, RonPath) -> Self raise RonDecodeError
+  fn from_ron(RonValue, RonPath, RonOptions) -> Self raise RonDecodeError
 }
 pub impl FromRon for Unit
 pub impl FromRon for Bool
@@ -147,7 +201,7 @@ pub impl[A : FromRon, B : FromRon] FromRon for (A, B)
 pub impl[A : FromRon, B : FromRon, C : FromRon] FromRon for (A, B, C)
 
 pub(open) trait ToRon {
-  fn to_ron(Self) -> RonValue
+  fn to_ron(Self, RonOptions) -> RonValue
 }
 pub impl ToRon for Unit
 pub impl ToRon for Bool
