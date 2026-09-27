@@ -2,12 +2,12 @@
 
 A strict, dependency-free RON parser and serializer for MoonBit.
 
-The current implementation provides four independently verified capabilities:
+The current implementation provides five independently verified capabilities:
 parsing a RON document into a dynamically typed `RonValue`, serializing that
 value back to compact canonical RON text, formatting structured values as
-readable multiline RON, and converting between RON values and typed MoonBit
-values through `FromRon` and `ToRon`. CLI workflows remain a separate
-follow-up milestone.
+readable multiline RON, converting between RON values and typed MoonBit values
+through `FromRon` and `ToRon`, and applying document extension attributes.
+CLI workflows remain a separate follow-up milestone.
 
 ## Why RON
 
@@ -38,8 +38,8 @@ let readable = @ron.to_string_pretty(value, indent=2)
 Typed values implement two traits:
 
 ```text
-impl @ron.ToRon for Point with fn to_ron(self) { ... }
-impl @ron.FromRon for Point with fn from_ron(value, path) { ... }
+impl @ron.ToRon for Point with fn to_ron(self, options) { ... }
+impl @ron.FromRon for Point with fn from_ron(value, path, options) { ... }
 
 let source = @ron.encode(point)
 let point : Point = @ron.decode(source)
@@ -51,17 +51,22 @@ The root package exports:
 - `to_string(value)`
 - `to_string_pretty(value, indent?)`
 - `decode[T](source, max_nesting_depth?)`
+- `decode_with_options[T](source, options?)`
 - `encode[T](value)`
+- `encode_with_options[T](value, options?)`
 - `FromRon` and `ToRon`
 - `valid(source)`
+- `parse_document(source, options?)`
 - `RonValue`, `RonNumber`, `RonPosition`, `RonError`, `RonPath`, and
   `RonDecodeError`
+- `RonExtensions`, `RonOptions`, and `RonDocument`
 
 Run the bundled example:
 
 ```text
 moon run cmd/main
 moon run cmd/typed
+moon run cmd/extensions
 ```
 
 Run the quality gates:
