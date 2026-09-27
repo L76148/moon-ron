@@ -2,10 +2,11 @@
 
 A strict, dependency-free RON parser and serializer for MoonBit.
 
-The current implementation provides two independently verified capabilities:
-parsing a RON document into a dynamically typed `RonValue`, and serializing
-that value back to canonical RON text. Typed deserialization, pretty
-formatting, and CLI workflows remain separate follow-up milestones.
+The current implementation provides three independently verified capabilities:
+parsing a RON document into a dynamically typed `RonValue`, serializing that
+value back to canonical RON text, and converting between RON values and typed
+MoonBit values through `FromRon` and `ToRon`. Pretty formatting and CLI
+workflows remain separate follow-up milestones.
 
 ## Why RON
 
@@ -32,17 +33,32 @@ let value = @ron.parse(
 let source = @ron.to_string(value)
 ```
 
+Typed values implement two traits:
+
+```text
+impl @ron.ToRon for Point with fn to_ron(self) { ... }
+impl @ron.FromRon for Point with fn from_ron(value, path) { ... }
+
+let source = @ron.encode(point)
+let point : Point = @ron.decode(source)
+```
+
 The root package exports:
 
 - `parse(source, max_nesting_depth?)`
 - `to_string(value)`
+- `decode[T](source, max_nesting_depth?)`
+- `encode[T](value)`
+- `FromRon` and `ToRon`
 - `valid(source)`
-- `RonValue`, `RonNumber`, `RonPosition`, and `RonError`
+- `RonValue`, `RonNumber`, `RonPosition`, `RonError`, `RonPath`, and
+  `RonDecodeError`
 
 Run the bundled example:
 
 ```text
 moon run cmd/main
+moon run cmd/typed
 ```
 
 Run the quality gates:
