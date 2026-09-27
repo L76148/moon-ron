@@ -153,7 +153,7 @@ test "parses options and enums" {
   )
   assert_eq(
     @moon-ron.parse("Color::Red"),
-    @moon-ron.RonValue::Identifier("Color::Red"),
+    @moon-ron.RonValue::Enum("Color", "Red", []),
   )
   assert_eq(
     @moon-ron.parse("Color::Rgb(255, 0, 0)"),

@@ -205,6 +205,14 @@ fn split_path(path : String) -> (String, String)? {
 }
 
 ///|
+fn is_type_name(path : String) -> Bool {
+  match path.get_char(0) {
+    Some(char) => char.is_ascii_uppercase()
+    None => false
+  }
+}
+
+///|
 fn RonParser::parse_value(
   self : RonParser,
   depth : Int,
@@ -256,13 +264,17 @@ fn RonParser::parse_identifier_value(
     }
     match split_path(path) {
       Some((owner, variant)) =>
-        if fields.length() == 0 {
+        if fields.length() == 0 && values.length() == 0 {
+          RonValue::Enum(owner, variant, [])
+        } else if fields.length() == 0 {
           RonValue::EnumTuple(owner, variant, values)
         } else {
           RonValue::Enum(owner, variant, fields)
         }
       None =>
-        if fields.length() == 0 {
+        if fields.length() == 0 && values.length() == 0 {
+          RonValue::Struct(path, [])
+        } else if fields.length() == 0 {
           RonValue::TupleStruct(path, values)
         } else {
           RonValue::Struct(path, fields)
@@ -275,7 +287,12 @@ fn RonParser::parse_identifier_value(
       "None" => RonValue::Option(None)
       "NaN" | "nan" => RonValue::Number(NaN)
       "inf" | "Infinity" | "infinity" => RonValue::Number(Infinity)
-      _ => RonValue::Identifier(path)
+      _ =>
+        match split_path(path) {
+          Some((owner, variant)) => RonValue::Enum(owner, variant, [])
+          None if is_type_name(path) => RonValue::Struct(path, [])
+          None => RonValue::Identifier(path)
+        }
     }
   }
 }
