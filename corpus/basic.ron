@@ -1,0 +1,11 @@
+Point(
+  x: 1,
+  y: -2,
+  label: "origin\nexample",
+  bytes: b"\x00\x7f\xff",
+  tags: ["parser", "ron"],
+  metadata: {
+    "stable": true,
+    "numbers": (1, 2.5, 0xff),
+  },
+)

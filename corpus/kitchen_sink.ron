@@ -1,0 +1,11 @@
+/* corpus fixture */
+Scene(
+  entities: [
+    Entity(name: "hero", health: 100),
+    Entity(name: "monster", health: 80),
+  ],
+  bindings: {
+    Up: Move(0, -1),
+    Down: Move(0, 1),
+  },
+)

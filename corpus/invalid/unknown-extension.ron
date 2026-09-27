@@ -1,0 +1,2 @@
+#![enable(not_a_real_extension)]
+42
