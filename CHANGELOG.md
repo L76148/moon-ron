@@ -6,6 +6,7 @@
 
 - Generic RON parser with a dynamically typed `RonValue`
 - Canonical compact serializer for every `RonValue` variant
+- Deterministic multiline formatter with configurable indentation
 - `FromRon` and `ToRon` traits with typed `decode` and `encode`
 - Typed implementations for primitives, options, arrays, string maps, tuples,
   and `RonValue`
@@ -16,5 +17,7 @@
   structs, enums, errors, and depth limits
 - Serializer tests covering escaping, exact output, and parse/serialize
   round trips
+- Formatter tests covering nested structures, maps, indentation, empty
+  containers, and round trips
 - Typed codec tests covering custom structs, enums, containers, and errors
 - A runnable parser example and repository CI

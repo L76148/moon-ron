@@ -2,11 +2,12 @@
 
 A strict, dependency-free RON parser and serializer for MoonBit.
 
-The current implementation provides three independently verified capabilities:
+The current implementation provides four independently verified capabilities:
 parsing a RON document into a dynamically typed `RonValue`, serializing that
-value back to canonical RON text, and converting between RON values and typed
-MoonBit values through `FromRon` and `ToRon`. Pretty formatting and CLI
-workflows remain separate follow-up milestones.
+value back to compact canonical RON text, formatting structured values as
+readable multiline RON, and converting between RON values and typed MoonBit
+values through `FromRon` and `ToRon`. CLI workflows remain a separate
+follow-up milestone.
 
 ## Why RON
 
@@ -31,6 +32,7 @@ let value = @ron.parse(
   "Point(x: 1, y: 2, tags: [\"parser\", \"ron\"])",
 )
 let source = @ron.to_string(value)
+let readable = @ron.to_string_pretty(value, indent=2)
 ```
 
 Typed values implement two traits:
@@ -47,6 +49,7 @@ The root package exports:
 
 - `parse(source, max_nesting_depth?)`
 - `to_string(value)`
+- `to_string_pretty(value, indent?)`
 - `decode[T](source, max_nesting_depth?)`
 - `encode[T](value)`
 - `FromRon` and `ToRon`
