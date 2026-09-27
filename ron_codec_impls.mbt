@@ -20,12 +20,12 @@ fn as_number(
 }
 
 ///|
-pub impl ToRon for Unit with fn to_ron(_) {
+pub impl ToRon for Unit with fn to_ron(_, _) {
   Unit
 }
 
 ///|
-pub impl FromRon for Unit with fn from_ron(value, path) {
+pub impl FromRon for Unit with fn from_ron(value, path, _) {
   match value {
     Unit => ()
     _ => decode_type_error(path, "unit", value)
@@ -33,12 +33,12 @@ pub impl FromRon for Unit with fn from_ron(value, path) {
 }
 
 ///|
-pub impl ToRon for Bool with fn to_ron(self) {
+pub impl ToRon for Bool with fn to_ron(self, _) {
   Bool(self)
 }
 
 ///|
-pub impl FromRon for Bool with fn from_ron(value, path) {
+pub impl FromRon for Bool with fn from_ron(value, path, _) {
   match value {
     Bool(value) => value
     _ => decode_type_error(path, "bool", value)
@@ -46,12 +46,12 @@ pub impl FromRon for Bool with fn from_ron(value, path) {
 }
 
 ///|
-pub impl ToRon for Byte with fn to_ron(self) {
+pub impl ToRon for Byte with fn to_ron(self, _) {
   Number(Signed(self.to_int64()))
 }
 
 ///|
-pub impl FromRon for Byte with fn from_ron(value, path) {
+pub impl FromRon for Byte with fn from_ron(value, path, _) {
   match as_number(value, path, "Byte") {
     Signed(value) if value >= 0L && value <= 255L => value.to_int().to_byte()
     Unsigned(value) if value <= 255UL => value.to_int().to_byte()
@@ -60,12 +60,12 @@ pub impl FromRon for Byte with fn from_ron(value, path) {
 }
 
 ///|
-pub impl ToRon for Int with fn to_ron(self) {
+pub impl ToRon for Int with fn to_ron(self, _) {
   Number(Signed(self.to_int64()))
 }
 
 ///|
-pub impl FromRon for Int with fn from_ron(value, path) {
+pub impl FromRon for Int with fn from_ron(value, path, _) {
   match as_number(value, path, "Int") {
     Signed(value) if value >= -2147483648L && value <= 2147483647L =>
       value.to_int()
@@ -75,12 +75,12 @@ pub impl FromRon for Int with fn from_ron(value, path) {
 }
 
 ///|
-pub impl ToRon for Int64 with fn to_ron(self) {
+pub impl ToRon for Int64 with fn to_ron(self, _) {
   Number(Signed(self))
 }
 
 ///|
-pub impl FromRon for Int64 with fn from_ron(value, path) {
+pub impl FromRon for Int64 with fn from_ron(value, path, _) {
   match as_number(value, path, "Int64") {
     Signed(value) => value
     Unsigned(value) if value <= 0x7fffffffffffffffUL =>
@@ -90,12 +90,12 @@ pub impl FromRon for Int64 with fn from_ron(value, path) {
 }
 
 ///|
-pub impl ToRon for UInt with fn to_ron(self) {
+pub impl ToRon for UInt with fn to_ron(self, _) {
   Number(Unsigned(self.to_uint64()))
 }
 
 ///|
-pub impl FromRon for UInt with fn from_ron(value, path) {
+pub impl FromRon for UInt with fn from_ron(value, path, _) {
   match as_number(value, path, "UInt") {
     Signed(value) if value >= 0L && value <= 4294967295L =>
       value.to_int().reinterpret_as_uint()
@@ -106,12 +106,12 @@ pub impl FromRon for UInt with fn from_ron(value, path) {
 }
 
 ///|
-pub impl ToRon for UInt64 with fn to_ron(self) {
+pub impl ToRon for UInt64 with fn to_ron(self, _) {
   Number(Unsigned(self))
 }
 
 ///|
-pub impl FromRon for UInt64 with fn from_ron(value, path) {
+pub impl FromRon for UInt64 with fn from_ron(value, path, _) {
   match as_number(value, path, "UInt64") {
     Signed(value) if value >= 0L => value.reinterpret_as_uint64()
     Unsigned(value) => value
@@ -120,7 +120,7 @@ pub impl FromRon for UInt64 with fn from_ron(value, path) {
 }
 
 ///|
-pub impl ToRon for Double with fn to_ron(self) {
+pub impl ToRon for Double with fn to_ron(self, _) {
   if self.is_nan() {
     Number(NaN)
   } else if self.is_pos_inf() {
@@ -133,7 +133,7 @@ pub impl ToRon for Double with fn to_ron(self) {
 }
 
 ///|
-pub impl FromRon for Double with fn from_ron(value, path) {
+pub impl FromRon for Double with fn from_ron(value, path, _) {
   match as_number(value, path, "Double") {
     Signed(value) => value.to_double()
     Unsigned(value) => value.to_double()
@@ -145,7 +145,7 @@ pub impl FromRon for Double with fn from_ron(value, path) {
 }
 
 ///|
-pub impl ToRon for Float with fn to_ron(self) {
+pub impl ToRon for Float with fn to_ron(self, _) {
   if self.is_nan() {
     Number(NaN)
   } else if self.is_pos_inf() {
@@ -158,7 +158,7 @@ pub impl ToRon for Float with fn to_ron(self) {
 }
 
 ///|
-pub impl FromRon for Float with fn from_ron(value, path) {
+pub impl FromRon for Float with fn from_ron(value, path, _) {
   match as_number(value, path, "Float") {
     Signed(value) => Float::from_int64(value)
     Unsigned(value) => Float::from_uint64(value)
@@ -170,12 +170,12 @@ pub impl FromRon for Float with fn from_ron(value, path) {
 }
 
 ///|
-pub impl ToRon for Char with fn to_ron(self) {
+pub impl ToRon for Char with fn to_ron(self, _) {
   Char(self)
 }
 
 ///|
-pub impl FromRon for Char with fn from_ron(value, path) {
+pub impl FromRon for Char with fn from_ron(value, path, _) {
   match value {
     Char(value) => value
     _ => decode_type_error(path, "char", value)
@@ -183,12 +183,12 @@ pub impl FromRon for Char with fn from_ron(value, path) {
 }
 
 ///|
-pub impl ToRon for String with fn to_ron(self) {
+pub impl ToRon for String with fn to_ron(self, _) {
   String(self)
 }
 
 ///|
-pub impl FromRon for String with fn from_ron(value, path) {
+pub impl FromRon for String with fn from_ron(value, path, _) {
   match value {
     String(value) => value
     _ => decode_type_error(path, "string", value)
@@ -196,12 +196,12 @@ pub impl FromRon for String with fn from_ron(value, path) {
 }
 
 ///|
-pub impl ToRon for Bytes with fn to_ron(self) {
+pub impl ToRon for Bytes with fn to_ron(self, _) {
   Bytes(self)
 }
 
 ///|
-pub impl FromRon for Bytes with fn from_ron(value, path) {
+pub impl FromRon for Bytes with fn from_ron(value, path, _) {
   match value {
     Bytes(value) => value
     _ => decode_type_error(path, "bytes", value)
@@ -209,45 +209,56 @@ pub impl FromRon for Bytes with fn from_ron(value, path) {
 }
 
 ///|
-pub impl ToRon for RonValue with fn to_ron(self) {
+pub impl ToRon for RonValue with fn to_ron(self, _) {
   self
 }
 
 ///|
-pub impl FromRon for RonValue with fn from_ron(value, _) {
+pub impl FromRon for RonValue with fn from_ron(value, _, _) {
   value
 }
 
 ///|
-pub impl[T : ToRon] ToRon for T? with fn to_ron(self) {
+pub impl[T : ToRon] ToRon for T? with fn to_ron(self, options) {
   match self {
     None => Option(None)
-    Some(value) => Option(Some(ToRon::to_ron(value)))
+    Some(value) =>
+      if options.extensions.implicit_some {
+        ToRon::to_ron(value, options)
+      } else {
+        Option(Some(ToRon::to_ron(value, options)))
+      }
   }
 }
 
 ///|
-pub impl[T : FromRon] FromRon for T? with fn from_ron(value, path) {
+pub impl[T : FromRon] FromRon for T? with fn from_ron(value, path, options) {
   match value {
     Option(None) => None
     Option(Some(value)) =>
-      Some(FromRon::from_ron(value, path.add_variant("Some")))
+      Some(FromRon::from_ron(value, path.add_variant("Some"), options))
+    _ if options.extensions.implicit_some =>
+      Some(FromRon::from_ron(value, path.add_variant("Some"), options))
     _ => decode_type_error(path, "option", value)
   }
 }
 
 ///|
-pub impl[T : ToRon] ToRon for Array[T] with fn to_ron(self) {
-  Sequence(self.map(ToRon::to_ron))
+pub impl[T : ToRon] ToRon for Array[T] with fn to_ron(self, options) {
+  Sequence(self.map(value => ToRon::to_ron(value, options)))
 }
 
 ///|
-pub impl[T : FromRon] FromRon for Array[T] with fn from_ron(value, path) {
+pub impl[T : FromRon] FromRon for Array[T] with fn from_ron(
+  value,
+  path,
+  options,
+) {
   match value {
     Sequence(values) => {
       let result = []
       for i = 0; i < values.length(); i = i + 1 {
-        result.push(FromRon::from_ron(values[i], path.add_index(i)))
+        result.push(FromRon::from_ron(values[i], path.add_index(i), options))
       }
       result
     }
@@ -256,14 +267,18 @@ pub impl[T : FromRon] FromRon for Array[T] with fn from_ron(value, path) {
 }
 
 ///|
-pub impl[V : ToRon] ToRon for Map[String, V] with fn to_ron(self) {
+pub impl[V : ToRon] ToRon for Map[String, V] with fn to_ron(self, options) {
   let entries = self.to_array()
   entries.sort_by((left, right) => left.0.compare(right.0))
-  Map(entries.map(entry => (String(entry.0), ToRon::to_ron(entry.1))))
+  Map(entries.map(entry => (String(entry.0), ToRon::to_ron(entry.1, options))))
 }
 
 ///|
-pub impl[V : FromRon] FromRon for Map[String, V] with fn from_ron(value, path) {
+pub impl[V : FromRon] FromRon for Map[String, V] with fn from_ron(
+  value,
+  path,
+  options,
+) {
   match value {
     Map(entries) => {
       let result : Map[String, V] = Map([])
@@ -278,7 +293,7 @@ pub impl[V : FromRon] FromRon for Map[String, V] with fn from_ron(value, path) {
               value_type_name(key),
             )
         }
-        result[key] = FromRon::from_ron(value, path.add_key(key))
+        result[key] = FromRon::from_ron(value, path.add_key(key), options)
       }
       result
     }
@@ -287,20 +302,21 @@ pub impl[V : FromRon] FromRon for Map[String, V] with fn from_ron(value, path) {
 }
 
 ///|
-pub impl[A : ToRon, B : ToRon] ToRon for (A, B) with fn to_ron(self) {
-  Tuple([ToRon::to_ron(self.0), ToRon::to_ron(self.1)])
+pub impl[A : ToRon, B : ToRon] ToRon for (A, B) with fn to_ron(self, options) {
+  Tuple([ToRon::to_ron(self.0, options), ToRon::to_ron(self.1, options)])
 }
 
 ///|
 pub impl[A : FromRon, B : FromRon] FromRon for (A, B) with fn from_ron(
   value,
   path,
+  options,
 ) {
   match value {
     Tuple(values) if values.length() == 2 =>
       (
-        FromRon::from_ron(values[0], path.add_index(0)),
-        FromRon::from_ron(values[1], path.add_index(1)),
+        FromRon::from_ron(values[0], path.add_index(0), options),
+        FromRon::from_ron(values[1], path.add_index(1), options),
       )
     Tuple(values) => raise UnexpectedTupleLength(path, 2, values.length())
     _ => decode_type_error(path, "tuple", value)
@@ -310,21 +326,27 @@ pub impl[A : FromRon, B : FromRon] FromRon for (A, B) with fn from_ron(
 ///|
 pub impl[A : ToRon, B : ToRon, C : ToRon] ToRon for (A, B, C) with fn to_ron(
   self,
+  options,
 ) {
-  Tuple([ToRon::to_ron(self.0), ToRon::to_ron(self.1), ToRon::to_ron(self.2)])
+  Tuple([
+    ToRon::to_ron(self.0, options),
+    ToRon::to_ron(self.1, options),
+    ToRon::to_ron(self.2, options),
+  ])
 }
 
 ///|
 pub impl[A : FromRon, B : FromRon, C : FromRon] FromRon for (A, B, C) with fn from_ron(
   value,
   path,
+  options,
 ) {
   match value {
     Tuple(values) if values.length() == 3 =>
       (
-        FromRon::from_ron(values[0], path.add_index(0)),
-        FromRon::from_ron(values[1], path.add_index(1)),
-        FromRon::from_ron(values[2], path.add_index(2)),
+        FromRon::from_ron(values[0], path.add_index(0), options),
+        FromRon::from_ron(values[1], path.add_index(1), options),
+        FromRon::from_ron(values[2], path.add_index(2), options),
       )
     Tuple(values) => raise UnexpectedTupleLength(path, 3, values.length())
     _ => decode_type_error(path, "tuple", value)

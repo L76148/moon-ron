@@ -5,17 +5,21 @@ priv struct Point {
 }
 
 ///|
-impl @ron.ToRon for Point with fn to_ron(self) {
+impl @ron.ToRon for Point with fn to_ron(self, options) {
   @ron.RonValue::Struct("Point", [
-    ("x", @ron.ToRon::to_ron(self.x)),
-    ("y", @ron.ToRon::to_ron(self.y)),
+    ("x", @ron.ToRon::to_ron(self.x, options)),
+    ("y", @ron.ToRon::to_ron(self.y, options)),
   ])
 }
 
 ///|
-impl @ron.FromRon for Point with fn from_ron(value, path) {
+impl @ron.FromRon for Point with fn from_ron(value, path, options) {
+  @ron.require_struct_name(value, "Point", path, options)
   let fields = @ron.struct_fields(value, path)
-  { x: @ron.field(fields, "x", path), y: @ron.field(fields, "y", path), }
+  {
+    x: @ron.field(fields, "x", path, options),
+    y: @ron.field(fields, "y", path, options),
+  }
 }
 
 ///|

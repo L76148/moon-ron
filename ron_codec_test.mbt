@@ -5,19 +5,20 @@ priv struct Point {
 } derive(Eq, Debug)
 
 ///|
-impl @moon-ron.ToRon for Point with fn to_ron(self) {
+impl @moon-ron.ToRon for Point with fn to_ron(self, options) {
   @moon-ron.RonValue::Struct("Point", [
-    ("x", @moon-ron.ToRon::to_ron(self.x)),
-    ("y", @moon-ron.ToRon::to_ron(self.y)),
+    ("x", @moon-ron.ToRon::to_ron(self.x, options)),
+    ("y", @moon-ron.ToRon::to_ron(self.y, options)),
   ])
 }
 
 ///|
-impl @moon-ron.FromRon for Point with fn from_ron(value, path) {
+impl @moon-ron.FromRon for Point with fn from_ron(value, path, options) {
+  @moon-ron.require_struct_name(value, "Point", path, options)
   let fields = @moon-ron.struct_fields(value, path)
   {
-    x: @moon-ron.field(fields, "x", path),
-    y: @moon-ron.field(fields, "y", path),
+    x: @moon-ron.field(fields, "x", path, options),
+    y: @moon-ron.field(fields, "y", path, options),
   }
 }
 
@@ -28,22 +29,22 @@ priv enum Shape {
 } derive(Eq, Debug)
 
 ///|
-impl @moon-ron.ToRon for Shape with fn to_ron(self) {
+impl @moon-ron.ToRon for Shape with fn to_ron(self, options) {
   match self {
     Dot => @moon-ron.RonValue::Enum("Shape", "Dot", [])
     Circle(radius) =>
       @moon-ron.RonValue::EnumTuple("Shape", "Circle", [
-        @moon-ron.ToRon::to_ron(radius),
+        @moon-ron.ToRon::to_ron(radius, options),
       ])
   }
 }
 
 ///|
-impl @moon-ron.FromRon for Shape with fn from_ron(value, path) {
+impl @moon-ron.FromRon for Shape with fn from_ron(value, path, options) {
   match value {
     @moon-ron.RonValue::Enum("Shape", "Dot", _) => Dot
     @moon-ron.RonValue::EnumTuple("Shape", "Circle", values) =>
-      Circle(@moon-ron.positional(values, 0, path))
+      Circle(@moon-ron.positional(values, 0, path, options))
     _ => raise @moon-ron.UnknownVariant(path, @moon-ron.value_type_name(value))
   }
 }
