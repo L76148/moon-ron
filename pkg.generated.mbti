@@ -8,6 +8,8 @@ import {
 // Values
 pub fn parse(StringView, max_nesting_depth? : Int) -> RonValue raise RonError
 
+pub fn to_string(RonValue) -> String
+
 pub fn valid(StringView) -> Bool
 
 // Errors
