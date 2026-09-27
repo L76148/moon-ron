@@ -6,13 +6,45 @@ import {
 }
 
 // Values
+pub fn[T : FromRon] decode(StringView, max_nesting_depth? : Int) -> T raise RonDecodeError
+
+pub fn[T : ToRon] encode(T) -> String
+
+pub fn[T : FromRon] field(Array[(String, RonValue)], String, RonPath) -> T raise RonDecodeError
+
+pub fn field_value(Array[(String, RonValue)], String, RonPath) -> RonValue raise RonDecodeError
+
+pub fn[T : FromRon] from_value(RonValue) -> T raise RonDecodeError
+
 pub fn parse(StringView, max_nesting_depth? : Int) -> RonValue raise RonError
+
+pub fn[T : FromRon] positional(Array[RonValue], Int, RonPath) -> T raise RonDecodeError
+
+pub fn struct_fields(RonValue, RonPath) -> Array[(String, RonValue)] raise RonDecodeError
 
 pub fn to_string(RonValue) -> String
 
+pub fn[T : ToRon] to_value(T) -> RonValue
+
+pub fn tuple_fields(RonValue, RonPath) -> Array[RonValue] raise RonDecodeError
+
 pub fn valid(StringView) -> Bool
 
+pub fn value_type_name(RonValue) -> String
+
 // Errors
+pub(all) suberror RonDecodeError {
+  Syntax(RonError)
+  TypeMismatch(RonPath, String, String)
+  MissingField(RonPath, String)
+  UnexpectedTupleLength(RonPath, Int, Int)
+  UnknownVariant(RonPath, String)
+  InvalidValue(RonPath, String)
+} derive(Eq, @debug.Debug)
+pub fn RonDecodeError::equal(Self, Self) -> Bool
+pub fn RonDecodeError::not_equal(Self, Self) -> Bool
+pub fn RonDecodeError::to_repr(Self) -> @debug.Repr
+
 pub(all) suberror RonError {
   UnexpectedChar(RonPosition, Char)
   UnexpectedEof(RonPosition)
@@ -37,6 +69,21 @@ pub(all) enum RonNumber {
 pub fn RonNumber::equal(Self, Self) -> Bool
 pub fn RonNumber::not_equal(Self, Self) -> Bool
 pub fn RonNumber::to_repr(Self) -> @debug.Repr
+
+pub(all) enum RonPath {
+  Root
+  Key(String, RonPath)
+  Index(Int, RonPath)
+  Variant(String, RonPath)
+} derive(Eq, @debug.Debug)
+pub fn RonPath::add_index(Self, Int) -> Self
+pub fn RonPath::add_key(Self, String) -> Self
+pub fn RonPath::add_variant(Self, String) -> Self
+pub fn RonPath::equal(Self, Self) -> Bool
+pub fn RonPath::not_equal(Self, Self) -> Bool
+pub fn RonPath::root() -> Self
+pub fn RonPath::to_repr(Self) -> @debug.Repr
+pub fn RonPath::to_string(Self) -> String
 
 pub(all) struct RonPosition {
   index : Int
@@ -66,9 +113,54 @@ pub(all) enum RonValue {
   Identifier(String)
 } derive(Eq, @debug.Debug)
 pub fn RonValue::equal(Self, Self) -> Bool
+pub fn RonValue::from_ron(Self, RonPath) -> Self raise RonDecodeError
 pub fn RonValue::not_equal(Self, Self) -> Bool
 pub fn RonValue::to_repr(Self) -> @debug.Repr
+pub fn RonValue::to_ron(Self) -> Self
+pub impl FromRon for RonValue
+pub impl ToRon for RonValue
 
 // Type aliases
 
 // Traits
+pub(open) trait FromRon {
+  fn from_ron(RonValue, RonPath) -> Self raise RonDecodeError
+}
+pub impl FromRon for Unit
+pub impl FromRon for Bool
+pub impl FromRon for Byte
+pub impl FromRon for Char
+pub impl FromRon for Int
+pub impl FromRon for Int64
+pub impl FromRon for UInt
+pub impl FromRon for UInt64
+pub impl FromRon for Float
+pub impl FromRon for Double
+pub impl FromRon for String
+pub impl[T : FromRon] FromRon for T?
+pub impl FromRon for Bytes
+pub impl[T : FromRon] FromRon for Array[T]
+pub impl[V : FromRon] FromRon for Map[String, V]
+pub impl[A : FromRon, B : FromRon] FromRon for (A, B)
+pub impl[A : FromRon, B : FromRon, C : FromRon] FromRon for (A, B, C)
+
+pub(open) trait ToRon {
+  fn to_ron(Self) -> RonValue
+}
+pub impl ToRon for Unit
+pub impl ToRon for Bool
+pub impl ToRon for Byte
+pub impl ToRon for Char
+pub impl ToRon for Int
+pub impl ToRon for Int64
+pub impl ToRon for UInt
+pub impl ToRon for UInt64
+pub impl ToRon for Float
+pub impl ToRon for Double
+pub impl ToRon for String
+pub impl[T : ToRon] ToRon for T?
+pub impl ToRon for Bytes
+pub impl[T : ToRon] ToRon for Array[T]
+pub impl[V : ToRon] ToRon for Map[String, V]
+pub impl[A : ToRon, B : ToRon] ToRon for (A, B)
+pub impl[A : ToRon, B : ToRon, C : ToRon] ToRon for (A, B, C)
