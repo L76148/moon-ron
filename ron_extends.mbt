@@ -39,3 +39,21 @@ pub extend RonDecodeError with Eq::{equal, not_equal}
 
 ///|
 pub extend RonDecodeError with @debug.Debug::{to_repr}
+
+///|
+pub extend RonExtensions with Eq::{equal, not_equal}
+
+///|
+pub extend RonExtensions with @debug.Debug::{to_repr}
+
+///|
+pub extend RonOptions with Eq::{equal, not_equal}
+
+///|
+pub extend RonOptions with @debug.Debug::{to_repr}
+
+///|
+pub extend RonDocument with Eq::{equal, not_equal}
+
+///|
+pub extend RonDocument with @debug.Debug::{to_repr}

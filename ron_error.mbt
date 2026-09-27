@@ -14,5 +14,8 @@ pub(all) suberror RonError {
   InvalidEscape(RonPosition)
   InvalidNumber(RonPosition, String)
   InvalidValue(RonPosition, String)
+  UnknownExtension(RonPosition, String)
+  UnknownAttribute(RonPosition, String)
+  InvalidAttribute(RonPosition, String)
   DepthLimitExceeded(Int)
 } derive(Eq, Debug)
