@@ -23,4 +23,8 @@ keywords = [ "ron", "parser", "serialization", "configuration" ]
 
 preferred_target = "wasm"
 
-description = "A strict, dependency-free implementation of Rusty Object Notation (RON) for MoonBit."
+description = "A strict RON parser, serializer, formatter, and typed codec for MoonBit."
+
+import {
+  "moonbitlang/x@0.5.5",
+}
