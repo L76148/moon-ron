@@ -334,6 +334,19 @@ fn RonParser::parse_tuple(
     self.offset = self.offset + 1
     return RonValue::Unit
   }
+  if self.looks_like_named_field() {
+    let fields = []
+    while true {
+      let name = self.parse_identifier()
+      self.skip_trivia()
+      self.expect(':')
+      fields.push((name, self.parse_value(depth + 1)))
+      if self.parse_comma_or_end(')') {
+        break
+      }
+    }
+    return RonValue::Struct("", fields)
+  }
   let values = []
   while true {
     values.push(self.parse_value(depth + 1))

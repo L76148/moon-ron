@@ -142,6 +142,13 @@ test "parses maps and named values" {
       @moon-ron.RonValue::Number(Signed(2L)),
     ]),
   )
+  assert_eq(
+    @moon-ron.parse("(x: 1, y: 2)"),
+    @moon-ron.RonValue::Struct("", [
+      ("x", @moon-ron.RonValue::Number(Signed(1L))),
+      ("y", @moon-ron.RonValue::Number(Signed(2L))),
+    ]),
+  )
 }
 
 ///|

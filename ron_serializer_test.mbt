@@ -80,6 +80,14 @@ test "serializes structured values" {
   )
   assert_eq(
     @moon-ron.to_string(
+      @moon-ron.RonValue::Struct("", [
+        ("x", @moon-ron.RonValue::Number(Signed(1L))),
+      ]),
+    ),
+    "(x: 1)",
+  )
+  assert_eq(
+    @moon-ron.to_string(
       @moon-ron.RonValue::EnumTuple("Color", "Rgb", [
         @moon-ron.RonValue::Number(Signed(255L)),
         @moon-ron.RonValue::Number(Signed(0L)),
