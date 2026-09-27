@@ -7,7 +7,7 @@ Development is intentionally split into independently verifiable increments.
 3. [x] Typed `FromRon` and `ToRon` conversion traits
 4. [x] Structured formatter and diagnostics
 5. [x] RON extension attributes
-6. [ ] CLI, examples, and compatibility corpus
+6. [x] CLI, examples, and compatibility corpus
 
 Each increment must pass the repository CI and be usable without requiring
 unfinished later increments.

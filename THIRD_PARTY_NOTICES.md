@@ -11,3 +11,11 @@ the Rust `ron` project:
 No source code from `ron` is copied in the current increment. If later
 milestones import upstream fixtures or adapted test data, the relevant files,
 license text, and modifications will be listed here before release.
+
+## moonbitlang/x
+
+The CLI uses the official filesystem package for file access:
+
+- Project: https://github.com/moonbitlang/x
+- Version: 0.5.5
+- License: Apache-2.0

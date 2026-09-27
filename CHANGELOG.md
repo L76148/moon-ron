@@ -11,6 +11,9 @@
 - `unwrap_newtypes`, `implicit_some`, `unwrap_variant_newtypes`, and
   `explicit_struct_names` options
 - `parse_document`, `decode_with_options`, and `encode_with_options`
+- `check`, `format`, and `compact` CLI commands via `cmd/ron`
+- Compatibility corpus covering valid, extension, and invalid documents
+- Official `moonbitlang/x/fs` dependency for CLI file access
 - `FromRon` and `ToRon` traits with typed `decode` and `encode`
 - Typed implementations for primitives, options, arrays, string maps, tuples,
   and `RonValue`

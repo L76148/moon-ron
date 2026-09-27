@@ -24,3 +24,9 @@ jobs:
 
       - name: Format
         run: moon fmt --check
+
+      - name: Compatibility corpus
+        run: |
+          moon run cmd/ron -- check corpus/basic.ron
+          moon run cmd/ron -- check corpus/extensions.ron
+          moon run cmd/ron -- check corpus/kitchen_sink.ron

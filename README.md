@@ -1,13 +1,16 @@
 # L76148/moon-ron
 
-A strict, dependency-free RON parser and serializer for MoonBit.
+A strict RON parser, serializer, formatter, and typed codec for MoonBit.
 
-The current implementation provides five independently verified capabilities:
+The current implementation provides six independently verified capabilities:
 parsing a RON document into a dynamically typed `RonValue`, serializing that
 value back to compact canonical RON text, formatting structured values as
 readable multiline RON, converting between RON values and typed MoonBit values
-through `FromRon` and `ToRon`, and applying document extension attributes.
-CLI workflows remain a separate follow-up milestone.
+through `FromRon` and `ToRon`, applying document extension attributes, and
+checking or formatting files through a CLI.
+
+The library core has no runtime dependencies. The CLI uses the official
+`moonbitlang/x/fs` package for file access.
 
 ## Why RON
 
@@ -67,6 +70,14 @@ Run the bundled example:
 moon run cmd/main
 moon run cmd/typed
 moon run cmd/extensions
+```
+
+Run the CLI:
+
+```text
+moon run cmd/ron -- check corpus/basic.ron
+moon run cmd/ron -- format corpus/basic.ron
+moon run cmd/ron -- compact corpus/kitchen_sink.ron
 ```
 
 Run the quality gates:
