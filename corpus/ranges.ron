@@ -1,0 +1,8 @@
+(
+  full: ..,
+  upper: ..10,
+  lower: 3..,
+  half_open: 3..10,
+  inclusive: 3..=10,
+  decimals: -2.1..=7.3,
+)

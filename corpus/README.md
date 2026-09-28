@@ -6,6 +6,7 @@ extension behavior without requiring external services.
 - `basic.ron`: structs, lists, maps, tuples, strings, bytes, and numbers
 - `extensions.ron`: all supported document extension attributes
 - `kitchen_sink.ron`: nested RON structures and comments
+- `ranges.ron`: open, closed, inclusive, integer, and decimal ranges
 - `invalid/unclosed-list.ron`: parse failure
 - `invalid/unknown-extension.ron`: extension validation failure
 
