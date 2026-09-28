@@ -8,6 +8,7 @@ Development is intentionally split into independently verifiable increments.
 4. [x] Structured formatter and diagnostics
 5. [x] RON extension attributes
 6. [x] CLI, examples, and compatibility corpus
+7. [x] RON range syntax and typed `RonRange`
 
 Each increment must pass the repository CI and be usable without requiring
 unfinished later increments.

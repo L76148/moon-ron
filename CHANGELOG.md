@@ -8,6 +8,7 @@
 - Canonical compact serializer for every `RonValue` variant
 - Deterministic multiline formatter with configurable indentation
 - RON document attributes for `enable`, `type`, and `schema`
+- Open, closed, and inclusive RON ranges with typed `RonRange` conversion
 - `unwrap_newtypes`, `implicit_some`, `unwrap_variant_newtypes`, and
   `explicit_struct_names` options
 - `parse_document`, `decode_with_options`, and `encode_with_options`
@@ -28,5 +29,7 @@
   containers, and round trips
 - Extension tests covering attributes, option precedence, and all four
   supported extension semantics
+- Range tests covering parsing, compact/pretty output, typed conversion, and
+  decimal bounds
 - Typed codec tests covering custom structs, enums, containers, and errors
 - A runnable parser example and repository CI
