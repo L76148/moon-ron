@@ -14,7 +14,7 @@ moon run cmd/ron -- compact <file>
 
 Document extension attributes are preserved by `format` and `compact`.
 Invalid files produce a nonzero exit status and a diagnostic on standard
-error.
+error. Diagnostics include the source line and caret position.
 
 The CLI uses `moonbitlang/x/fs`; the library packages themselves do not
 depend on filesystem access.

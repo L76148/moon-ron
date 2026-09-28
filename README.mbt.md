@@ -15,7 +15,7 @@ The library core has no runtime dependencies. The CLI uses the official
 ## Install
 
 ```text
-moon add L76148/moon-ron@0.1.0
+moon add L76148/moon-ron@0.1.1
 ```
 
 ## Why RON
@@ -70,6 +70,7 @@ The root package exports:
 - `RonValue`, `RonNumber`, `RonPosition`, `RonError`, `RonPath`, and
   `RonDecodeError`
 - `RonExtensions`, `RonOptions`, and `RonDocument`
+- `render_error(source, error)` and `render_decode_error(source, error)`
 
 Run the bundled example:
 
