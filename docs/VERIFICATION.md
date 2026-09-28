@@ -5,9 +5,9 @@ Recorded on 2026-09-28.
 | Check | Result |
 | --- | --- |
 | `moon check --deny-warn` | passed |
-| `moon test --deny-warn` | 41 of 41 passed |
-| `moon test --deny-warn --target wasm` | 41 of 41 passed |
-| `moon test --deny-warn --target wasm-gc` | 41 of 41 passed |
+| `moon test --deny-warn` | 45 of 45 passed |
+| `moon test --deny-warn --target wasm` | 45 of 45 passed |
+| `moon test --deny-warn --target wasm-gc` | 45 of 45 passed |
 | `moon fmt --check` | passed |
 | `moon run cmd/main` | printed multiline `Point` output |
 | `moon run cmd/typed` | encoded and decoded a custom `Point` type |
@@ -16,6 +16,7 @@ Recorded on 2026-09-28.
 | `moon run cmd/ron -- format corpus/basic.ron` | produced multiline RON |
 | `moon run cmd/ron -- check corpus/invalid/unclosed-list.ron` | failed as expected |
 | `moon run cmd/ron -- check corpus/ranges.ron` | passed |
+| `moon run cmd/ron -- check corpus/typed_values.ron` | passed |
 
 The local machine does not have Node.js or a system C compiler, so JavaScript
 runtime execution and Native linking were not available in this environment.

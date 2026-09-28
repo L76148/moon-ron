@@ -2,8 +2,8 @@
 
 `FromRon` and `ToRon` keep typed conversion separate from parsing and
 serialization. The library provides implementations for primitive values,
-options, arrays, string-keyed maps, tuples up to three elements, and
-`RonValue`.
+options, arrays, fixed arrays, array views, string-keyed maps, `Result`,
+tuples up to eight elements, `RonRange`, and `RonValue`.
 
 ## Custom struct
 

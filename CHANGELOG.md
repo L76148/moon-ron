@@ -18,6 +18,8 @@
 - `FromRon` and `ToRon` traits with typed `decode` and `encode`
 - Typed implementations for primitives, options, arrays, string maps, tuples,
   and `RonValue`
+- Typed implementations for `Int16`, `UInt16`, fixed arrays, array views,
+  `Result`, and tuples up to eight elements
 - Path-aware `RonDecodeError` and `RonPath`
 - Positioned `RonError` diagnostics and nesting-depth limits
 - Public `parse`, `valid`, and `to_string` entry points
