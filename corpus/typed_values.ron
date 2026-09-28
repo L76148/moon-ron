@@ -1,0 +1,8 @@
+(
+  int16: -123,
+  uint16: 65535,
+  fixed: [1, 2, 3],
+  result_ok: Ok(42),
+  result_err: Err("bad"),
+  tuple8: (1, 2, 3, 4, 5, 6, 7, 8),
+)

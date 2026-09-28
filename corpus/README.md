@@ -7,6 +7,7 @@ extension behavior without requiring external services.
 - `extensions.ron`: all supported document extension attributes
 - `kitchen_sink.ron`: nested RON structures and comments
 - `ranges.ron`: open, closed, inclusive, integer, and decimal ranges
+- `typed_values.ron`: values used by the broader typed codec suite
 - `invalid/unclosed-list.ron`: parse failure
 - `invalid/unknown-extension.ron`: extension validation failure
 
