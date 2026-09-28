@@ -120,6 +120,36 @@ pub impl FromRon for UInt64 with fn from_ron(value, path, _) {
 }
 
 ///|
+pub impl ToRon for Int16 with fn to_ron(self, _) {
+  Number(Signed(self.to_int64()))
+}
+
+///|
+pub impl FromRon for Int16 with fn from_ron(value, path, _) {
+  match as_number(value, path, "Int16") {
+    Signed(value) if value >= -32768L && value <= 32767L =>
+      Int16::from_int(value.to_int())
+    Unsigned(value) if value <= 32767UL => Int16::from_int(value.to_int())
+    _ => raise InvalidValue(path, "Int16 out of range")
+  }
+}
+
+///|
+pub impl ToRon for UInt16 with fn to_ron(self, _) {
+  Number(Unsigned(self.to_uint64()))
+}
+
+///|
+pub impl FromRon for UInt16 with fn from_ron(value, path, _) {
+  match as_number(value, path, "UInt16") {
+    Signed(value) if value >= 0L && value <= 65535L =>
+      value.to_int().to_uint16()
+    Unsigned(value) if value <= 65535UL => value.to_int().to_uint16()
+    _ => raise InvalidValue(path, "UInt16 out of range")
+  }
+}
+
+///|
 pub impl ToRon for Double with fn to_ron(self, _) {
   if self.is_nan() {
     Number(NaN)
@@ -280,6 +310,36 @@ pub impl[T : FromRon] FromRon for Array[T] with fn from_ron(
 }
 
 ///|
+pub impl[T : ToRon] ToRon for FixedArray[T] with fn to_ron(self, options) {
+  Sequence(
+    Array::from_fixed_array(self.map(value => ToRon::to_ron(value, options))),
+  )
+}
+
+///|
+pub impl[T : FromRon] FromRon for FixedArray[T] with fn from_ron(
+  value,
+  path,
+  options,
+) {
+  match value {
+    Sequence(values) => {
+      let result = []
+      for i = 0; i < values.length(); i = i + 1 {
+        result.push(FromRon::from_ron(values[i], path.add_index(i), options))
+      }
+      FixedArray::from_array(result)
+    }
+    _ => decode_type_error(path, "fixed array", value)
+  }
+}
+
+///|
+pub impl[T : ToRon] ToRon for ArrayView[T] with fn to_ron(self, options) {
+  Sequence(self.to_owned().map(value => ToRon::to_ron(value, options)))
+}
+
+///|
 pub impl[V : ToRon] ToRon for Map[String, V] with fn to_ron(self, options) {
   let entries = self.to_array()
   entries.sort_by((left, right) => left.0.compare(right.0))
@@ -311,6 +371,36 @@ pub impl[V : FromRon] FromRon for Map[String, V] with fn from_ron(
       result
     }
     _ => decode_type_error(path, "map", value)
+  }
+}
+
+///|
+pub impl[Ok : ToRon, Err : ToRon] ToRon for Result[Ok, Err] with fn to_ron(
+  self,
+  options,
+) {
+  match self {
+    Ok(value) => TupleStruct("Ok", [ToRon::to_ron(value, options)])
+    Err(error) => TupleStruct("Err", [ToRon::to_ron(error, options)])
+  }
+}
+
+///|
+pub impl[Ok : FromRon, Err : FromRon] FromRon for Result[Ok, Err] with fn from_ron(
+  value,
+  path,
+  options,
+) {
+  match value {
+    TupleStruct("Ok", values) if values.length() == 1 =>
+      Ok(FromRon::from_ron(values[0], path.add_variant("Ok"), options))
+    TupleStruct("Err", values) if values.length() == 1 =>
+      Err(FromRon::from_ron(values[0], path.add_variant("Err"), options))
+    EnumTuple(_, "Ok", values) if values.length() == 1 =>
+      Ok(FromRon::from_ron(values[0], path.add_variant("Ok"), options))
+    EnumTuple(_, "Err", values) if values.length() == 1 =>
+      Err(FromRon::from_ron(values[0], path.add_variant("Err"), options))
+    _ => raise InvalidValue(path, "expected Result variant Ok or Err")
   }
 }
 
@@ -362,6 +452,219 @@ pub impl[A : FromRon, B : FromRon, C : FromRon] FromRon for (A, B, C) with fn fr
         FromRon::from_ron(values[2], path.add_index(2), options),
       )
     Tuple(values) => raise UnexpectedTupleLength(path, 3, values.length())
+    _ => decode_type_error(path, "tuple", value)
+  }
+}
+
+///|
+pub impl[A : ToRon, B : ToRon, C : ToRon, D : ToRon] ToRon for (A, B, C, D) with fn to_ron(
+  self,
+  options,
+) {
+  Tuple([
+    ToRon::to_ron(self.0, options),
+    ToRon::to_ron(self.1, options),
+    ToRon::to_ron(self.2, options),
+    ToRon::to_ron(self.3, options),
+  ])
+}
+
+///|
+pub impl[A : FromRon, B : FromRon, C : FromRon, D : FromRon] FromRon for (
+  A,
+  B,
+  C,
+  D,
+) with fn from_ron(value, path, options) {
+  match value {
+    Tuple(values) if values.length() == 4 =>
+      (
+        FromRon::from_ron(values[0], path.add_index(0), options),
+        FromRon::from_ron(values[1], path.add_index(1), options),
+        FromRon::from_ron(values[2], path.add_index(2), options),
+        FromRon::from_ron(values[3], path.add_index(3), options),
+      )
+    Tuple(values) => raise UnexpectedTupleLength(path, 4, values.length())
+    _ => decode_type_error(path, "tuple", value)
+  }
+}
+
+///|
+pub impl[A : ToRon, B : ToRon, C : ToRon, D : ToRon, E : ToRon] ToRon for (
+  A,
+  B,
+  C,
+  D,
+  E,
+) with fn to_ron(self, options) {
+  Tuple([
+    ToRon::to_ron(self.0, options),
+    ToRon::to_ron(self.1, options),
+    ToRon::to_ron(self.2, options),
+    ToRon::to_ron(self.3, options),
+    ToRon::to_ron(self.4, options),
+  ])
+}
+
+///|
+pub impl[A : FromRon, B : FromRon, C : FromRon, D : FromRon, E : FromRon] FromRon for (
+  A,
+  B,
+  C,
+  D,
+  E,
+) with fn from_ron(value, path, options) {
+  match value {
+    Tuple(values) if values.length() == 5 =>
+      (
+        FromRon::from_ron(values[0], path.add_index(0), options),
+        FromRon::from_ron(values[1], path.add_index(1), options),
+        FromRon::from_ron(values[2], path.add_index(2), options),
+        FromRon::from_ron(values[3], path.add_index(3), options),
+        FromRon::from_ron(values[4], path.add_index(4), options),
+      )
+    Tuple(values) => raise UnexpectedTupleLength(path, 5, values.length())
+    _ => decode_type_error(path, "tuple", value)
+  }
+}
+
+///|
+pub impl[A : ToRon, B : ToRon, C : ToRon, D : ToRon, E : ToRon, F : ToRon] ToRon for (
+  A,
+  B,
+  C,
+  D,
+  E,
+  F,
+) with fn to_ron(self, options) {
+  Tuple([
+    ToRon::to_ron(self.0, options),
+    ToRon::to_ron(self.1, options),
+    ToRon::to_ron(self.2, options),
+    ToRon::to_ron(self.3, options),
+    ToRon::to_ron(self.4, options),
+    ToRon::to_ron(self.5, options),
+  ])
+}
+
+///|
+pub impl[
+  A : FromRon,
+  B : FromRon,
+  C : FromRon,
+  D : FromRon,
+  E : FromRon,
+  F : FromRon,
+] FromRon for (A, B, C, D, E, F) with fn from_ron(value, path, options) {
+  match value {
+    Tuple(values) if values.length() == 6 =>
+      (
+        FromRon::from_ron(values[0], path.add_index(0), options),
+        FromRon::from_ron(values[1], path.add_index(1), options),
+        FromRon::from_ron(values[2], path.add_index(2), options),
+        FromRon::from_ron(values[3], path.add_index(3), options),
+        FromRon::from_ron(values[4], path.add_index(4), options),
+        FromRon::from_ron(values[5], path.add_index(5), options),
+      )
+    Tuple(values) => raise UnexpectedTupleLength(path, 6, values.length())
+    _ => decode_type_error(path, "tuple", value)
+  }
+}
+
+///|
+pub impl[
+  A : ToRon,
+  B : ToRon,
+  C : ToRon,
+  D : ToRon,
+  E : ToRon,
+  F : ToRon,
+  G : ToRon,
+] ToRon for (A, B, C, D, E, F, G) with fn to_ron(self, options) {
+  Tuple([
+    ToRon::to_ron(self.0, options),
+    ToRon::to_ron(self.1, options),
+    ToRon::to_ron(self.2, options),
+    ToRon::to_ron(self.3, options),
+    ToRon::to_ron(self.4, options),
+    ToRon::to_ron(self.5, options),
+    ToRon::to_ron(self.6, options),
+  ])
+}
+
+///|
+pub impl[
+  A : FromRon,
+  B : FromRon,
+  C : FromRon,
+  D : FromRon,
+  E : FromRon,
+  F : FromRon,
+  G : FromRon,
+] FromRon for (A, B, C, D, E, F, G) with fn from_ron(value, path, options) {
+  match value {
+    Tuple(values) if values.length() == 7 =>
+      (
+        FromRon::from_ron(values[0], path.add_index(0), options),
+        FromRon::from_ron(values[1], path.add_index(1), options),
+        FromRon::from_ron(values[2], path.add_index(2), options),
+        FromRon::from_ron(values[3], path.add_index(3), options),
+        FromRon::from_ron(values[4], path.add_index(4), options),
+        FromRon::from_ron(values[5], path.add_index(5), options),
+        FromRon::from_ron(values[6], path.add_index(6), options),
+      )
+    Tuple(values) => raise UnexpectedTupleLength(path, 7, values.length())
+    _ => decode_type_error(path, "tuple", value)
+  }
+}
+
+///|
+pub impl[
+  A : ToRon,
+  B : ToRon,
+  C : ToRon,
+  D : ToRon,
+  E : ToRon,
+  F : ToRon,
+  G : ToRon,
+  H : ToRon,
+] ToRon for (A, B, C, D, E, F, G, H) with fn to_ron(self, options) {
+  Tuple([
+    ToRon::to_ron(self.0, options),
+    ToRon::to_ron(self.1, options),
+    ToRon::to_ron(self.2, options),
+    ToRon::to_ron(self.3, options),
+    ToRon::to_ron(self.4, options),
+    ToRon::to_ron(self.5, options),
+    ToRon::to_ron(self.6, options),
+    ToRon::to_ron(self.7, options),
+  ])
+}
+
+///|
+pub impl[
+  A : FromRon,
+  B : FromRon,
+  C : FromRon,
+  D : FromRon,
+  E : FromRon,
+  F : FromRon,
+  G : FromRon,
+  H : FromRon,
+] FromRon for (A, B, C, D, E, F, G, H) with fn from_ron(value, path, options) {
+  match value {
+    Tuple(values) if values.length() == 8 =>
+      (
+        FromRon::from_ron(values[0], path.add_index(0), options),
+        FromRon::from_ron(values[1], path.add_index(1), options),
+        FromRon::from_ron(values[2], path.add_index(2), options),
+        FromRon::from_ron(values[3], path.add_index(3), options),
+        FromRon::from_ron(values[4], path.add_index(4), options),
+        FromRon::from_ron(values[5], path.add_index(5), options),
+        FromRon::from_ron(values[6], path.add_index(6), options),
+        FromRon::from_ron(values[7], path.add_index(7), options),
+      )
+    Tuple(values) => raise UnexpectedTupleLength(path, 8, values.length())
     _ => decode_type_error(path, "tuple", value)
   }
 }
