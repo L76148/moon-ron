@@ -1,7 +1,7 @@
 ///|
 priv suberror CliError {
   Io(String)
-  Parse(@moonron.RonError)
+  Parse(@moonron.RonError, String)
   Usage(String)
 }
 
@@ -9,7 +9,7 @@ priv suberror CliError {
 fn CliError::to_string(self : CliError) -> String {
   match self {
     Io(message) => "io error: " + message
-    Parse(error) => "parse error: " + error.to_repr().to_string()
+    Parse(error, source) => @moonron.render_error(source, error)
     Usage(message) => "usage error: " + message
   }
 }
@@ -17,7 +17,7 @@ fn CliError::to_string(self : CliError) -> String {
 ///|
 fn parse_source(source : StringView) -> @moonron.RonDocument raise CliError {
   @moonron.parse_document(source) catch {
-    error => raise Parse(error)
+    error => raise Parse(error, source.to_owned())
   }
 }
 

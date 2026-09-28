@@ -33,7 +33,7 @@ test "reports invalid RON" {
     check_source("[1,")
     fail("expected a parse error")
   } catch {
-    Parse(_) => ()
+    Parse(_, _) => ()
     _ => fail("expected Parse")
   }
 }
