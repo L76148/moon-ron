@@ -30,3 +30,5 @@ jobs:
           moon run cmd/ron -- check corpus/basic.ron
           moon run cmd/ron -- check corpus/extensions.ron
           moon run cmd/ron -- check corpus/kitchen_sink.ron
+          moon run cmd/ron -- check corpus/ranges.ron
+          moon run cmd/ron -- check corpus/typed_values.ron
