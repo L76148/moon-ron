@@ -24,6 +24,7 @@ fn write_pretty_value(
     | String(_)
     | Bytes(_)
     | Byte(_)
+    | Range(_)
     | Identifier(_) => write_value(buffer, value)
     Option(None) => buffer.write_string("None")
     Option(Some(value)) => {

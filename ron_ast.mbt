@@ -10,6 +10,23 @@ pub(all) enum RonNumber {
 } derive(Eq, Debug)
 
 ///|
+/// A possibly open-ended RON range.
+pub(all) struct RonRange {
+  start : RonValue?
+  end : RonValue?
+  inclusive : Bool
+} derive(Eq, Debug)
+
+///|
+pub fn RonRange::new(
+  start? : RonValue,
+  end? : RonValue,
+  inclusive? : Bool = false,
+) -> RonRange {
+  { start, end, inclusive, }
+}
+
+///|
 /// A dynamically typed RON value.
 pub(all) enum RonValue {
   Unit
@@ -27,5 +44,6 @@ pub(all) enum RonValue {
   TupleStruct(String, Array[RonValue])
   Enum(String, String, Array[(String, RonValue)])
   EnumTuple(String, String, Array[RonValue])
+  Range(RonRange)
   Identifier(String)
 } derive(Eq, Debug)

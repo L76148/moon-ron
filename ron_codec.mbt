@@ -103,6 +103,7 @@ pub fn value_type_name(value : RonValue) -> String {
     Map(_) => "map"
     Struct(_, _) => "struct"
     Enum(_, _, _) | EnumTuple(_, _, _) => "enum"
+    Range(_) => "range"
     Identifier(_) => "identifier"
   }
 }

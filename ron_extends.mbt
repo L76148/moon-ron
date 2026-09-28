@@ -17,6 +17,18 @@ pub extend RonNumber with Eq::{equal, not_equal}
 pub extend RonNumber with @debug.Debug::{to_repr}
 
 ///|
+pub extend RonRange with Eq::{equal, not_equal}
+
+///|
+pub extend RonRange with @debug.Debug::{to_repr}
+
+///|
+pub extend RonRange with ToRon::{to_ron}
+
+///|
+pub extend RonRange with FromRon::{from_ron}
+
+///|
 pub extend RonValue with Eq::{equal, not_equal}
 
 ///|

@@ -219,6 +219,19 @@ pub impl FromRon for RonValue with fn from_ron(value, _, _) {
 }
 
 ///|
+pub impl ToRon for RonRange with fn to_ron(self, _) {
+  Range(self)
+}
+
+///|
+pub impl FromRon for RonRange with fn from_ron(value, path, _) {
+  match value {
+    Range(range) => range
+    _ => decode_type_error(path, "range", value)
+  }
+}
+
+///|
 pub impl[T : ToRon] ToRon for T? with fn to_ron(self, options) {
   match self {
     None => Option(None)

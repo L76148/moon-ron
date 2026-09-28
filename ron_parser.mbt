@@ -217,6 +217,23 @@ fn RonParser::parse_value(
   self : RonParser,
   depth : Int,
 ) -> RonValue raise RonError {
+  self.skip_trivia()
+  if self.peek() == Some('.') && self.peek_at(1) == Some('.') {
+    return self.parse_open_range(depth)
+  }
+  let value = self.parse_value_non_range(depth)
+  self.skip_trivia()
+  if self.peek() == Some('.') && self.peek_at(1) == Some('.') {
+    return self.parse_range_from(value, depth)
+  }
+  value
+}
+
+///|
+fn RonParser::parse_value_non_range(
+  self : RonParser,
+  depth : Int,
+) -> RonValue raise RonError {
   if depth > self.max_nesting_depth {
     raise DepthLimitExceeded(self.max_nesting_depth)
   }
@@ -245,6 +262,63 @@ fn RonParser::parse_value(
     Some(char) => raise self.error_char(char)
     None => raise self.error_eof()
   }
+}
+
+///|
+fn is_range_terminator(char : Char?) -> Bool {
+  match char {
+    None => true
+    Some(',') | Some(')') | Some(']') | Some('}') | Some(':') => true
+    _ => false
+  }
+}
+
+///|
+fn RonParser::parse_range_from(
+  self : RonParser,
+  start : RonValue,
+  depth : Int,
+) -> RonValue raise RonError {
+  self.offset = self.offset + 2
+  let inclusive = if self.peek() == Some('=') {
+    self.offset = self.offset + 1
+    true
+  } else {
+    false
+  }
+  self.skip_trivia()
+  if is_range_terminator(self.peek()) {
+    if inclusive {
+      raise self.error_eof()
+    }
+    return RonValue::Range({ start: Some(start), end: None, inclusive: false, })
+  }
+  let end = self.parse_value(depth + 1)
+  RonValue::Range({ start: Some(start), end: Some(end), inclusive, })
+}
+
+///|
+fn RonParser::parse_open_range(
+  self : RonParser,
+  depth : Int,
+) -> RonValue raise RonError {
+  self.expect('.')
+  self.expect('.')
+  let inclusive = if self.peek() == Some('=') {
+    self.offset = self.offset + 1
+    true
+  } else {
+    false
+  }
+  self.skip_trivia()
+  if is_range_terminator(self.peek()) {
+    if inclusive {
+      raise self.error_eof()
+    }
+    return RonValue::Range({ start: None, end: None, inclusive: false, })
+  }
+  let end = self.parse_value(depth + 1)
+  RonValue::Range({ start: None, end: Some(end), inclusive, })
 }
 
 ///|
@@ -679,6 +753,9 @@ fn RonParser::parse_number(self : RonParser) -> RonValue raise RonError {
   let buffer = StringBuilder()
   while self.offset < self.source.length() &&
         is_number_char(self.source[self.offset]) {
+    if self.source[self.offset] == '.' && self.peek_at(1) == Some('.') {
+      break
+    }
     buffer.write_char(self.source[self.offset])
     self.offset = self.offset + 1
   }

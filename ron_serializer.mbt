@@ -84,7 +84,27 @@ fn write_value(buffer : StringBuilder, value : RonValue) -> Unit {
       write_values(buffer, values)
       buffer.write_char(')')
     }
+    Range(range) => write_range(buffer, range)
     Identifier(name) => buffer.write_string(name)
+  }
+}
+
+///|
+fn write_range(buffer : StringBuilder, range : RonRange) -> Unit {
+  match range.start {
+    Some(start) => write_value(buffer, start)
+    None => ()
+  }
+  buffer.write_string(
+    if range.inclusive && range.end is Some(_) {
+      "..="
+    } else {
+      ".."
+    },
+  )
+  match range.end {
+    Some(end) => write_value(buffer, end)
+    None => ()
   }
 }
 
