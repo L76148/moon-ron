@@ -12,7 +12,7 @@
 10. **核心 API**：`parse`、`valid`、`to_string`、`to_string_pretty`、`decode`、`encode`、`render_error`、`render_decode_error`，以及 `RonValue`、`RonOptions`、`RonExtensions` 等类型。
 11. **工程质量**：49 个测试覆盖解析、序列化、格式化、扩展、range、类型化转换和诊断；GitHub Actions 通过 `moon check --deny-warn`、`moon test --deny-warn` 和 `moon fmt --check`。
 12. **技术路线**：手写递归下降解析器；词法与语法层负责源位置和错误恢复边界；通用值树与类型化转换分层，避免把 Rust 特有语义耦合进核心解析器。
-13. **工程质量**：使用 `moon check --deny-warn`、`moon test --deny-warn`、`moon fmt --check` 和 GitHub Actions；每个功能提供可运行示例、核心路径测试和接口变更记录。
+13. **维护计划**：跟踪 MoonBit 工具链和 RON 兼容性变化，持续扩充一致性语料、回归测试和语义化版本发布。
 14. **开源规范**：使用 Apache-2.0 根许可证；README 完整说明目标、安装、用法和示例；已发布 `L76148/moon-ron@0.1.1` 至 mooncakes.io。
 15. **明确不做**：本阶段不实现 Rust 编译器集成、第三方 crate 自动绑定、网络协议、二进制 RON 扩展或任意脚本执行。
 16. **提交要求**：开发期内按可验证功能积累不少于 10 个真实 commits，不使用空提交、重复提交或无意义拆分。
