@@ -150,6 +150,20 @@ pub fn RonPosition::equal(Self, Self) -> Bool
 pub fn RonPosition::not_equal(Self, Self) -> Bool
 pub fn RonPosition::to_repr(Self) -> @debug.Repr
 
+pub(all) struct RonRange {
+  start : RonValue?
+  end : RonValue?
+  inclusive : Bool
+} derive(Eq, @debug.Debug)
+pub fn RonRange::equal(Self, Self) -> Bool
+pub fn RonRange::from_ron(RonValue, RonPath, RonOptions) -> Self raise RonDecodeError
+pub fn RonRange::new(start? : RonValue, end? : RonValue, inclusive? : Bool) -> Self
+pub fn RonRange::not_equal(Self, Self) -> Bool
+pub fn RonRange::to_repr(Self) -> @debug.Repr
+pub fn RonRange::to_ron(Self, RonOptions) -> RonValue
+pub impl FromRon for RonRange
+pub impl ToRon for RonRange
+
 pub(all) enum RonValue {
   Unit
   Bool(Bool)
@@ -166,6 +180,7 @@ pub(all) enum RonValue {
   TupleStruct(String, Array[RonValue])
   Enum(String, String, Array[(String, RonValue)])
   EnumTuple(String, String, Array[RonValue])
+  Range(RonRange)
   Identifier(String)
 } derive(Eq, @debug.Debug)
 pub fn RonValue::equal(Self, Self) -> Bool
