@@ -4,6 +4,8 @@
 
 ### Added
 
+Published as `L76148/moon-ron@0.1.0` on mooncakes.io.
+
 - Generic RON parser with a dynamically typed `RonValue`
 - Canonical compact serializer for every `RonValue` variant
 - Deterministic multiline formatter with configurable indentation

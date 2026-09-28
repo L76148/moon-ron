@@ -12,6 +12,12 @@ checking or formatting files through a CLI.
 The library core has no runtime dependencies. The CLI uses the official
 `moonbitlang/x/fs` package for file access.
 
+## Install
+
+```text
+moon add L76148/moon-ron@0.1.0
+```
+
 ## Why RON
 
 MoonBit already has established packages for JSON, TOML, YAML, KDL, and HCL.
