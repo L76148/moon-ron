@@ -30,6 +30,10 @@ pub fn parse_document(StringView, options? : RonOptions) -> RonDocument raise Ro
 
 pub fn[T : FromRon] positional(Array[RonValue], Int, RonPath, RonOptions) -> T raise RonDecodeError
 
+pub fn render_decode_error(StringView, RonDecodeError) -> String
+
+pub fn render_error(StringView, RonError) -> String
+
 pub fn require_struct_name(RonValue, String, RonPath, RonOptions) -> Unit raise RonDecodeError
 
 pub fn struct_fields(RonValue, RonPath) -> Array[(String, RonValue)] raise RonDecodeError
