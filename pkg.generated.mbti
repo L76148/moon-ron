@@ -202,18 +202,27 @@ pub impl FromRon for Bool
 pub impl FromRon for Byte
 pub impl FromRon for Char
 pub impl FromRon for Int
+pub impl FromRon for Int16
 pub impl FromRon for Int64
 pub impl FromRon for UInt
+pub impl FromRon for UInt16
 pub impl FromRon for UInt64
 pub impl FromRon for Float
 pub impl FromRon for Double
 pub impl FromRon for String
 pub impl[T : FromRon] FromRon for T?
+pub impl[Ok : FromRon, Err : FromRon] FromRon for Result[Ok, Err]
+pub impl[T : FromRon] FromRon for FixedArray[T]
 pub impl FromRon for Bytes
 pub impl[T : FromRon] FromRon for Array[T]
 pub impl[V : FromRon] FromRon for Map[String, V]
 pub impl[A : FromRon, B : FromRon] FromRon for (A, B)
 pub impl[A : FromRon, B : FromRon, C : FromRon] FromRon for (A, B, C)
+pub impl[A : FromRon, B : FromRon, C : FromRon, D : FromRon] FromRon for (A, B, C, D)
+pub impl[A : FromRon, B : FromRon, C : FromRon, D : FromRon, E : FromRon] FromRon for (A, B, C, D, E)
+pub impl[A : FromRon, B : FromRon, C : FromRon, D : FromRon, E : FromRon, F : FromRon] FromRon for (A, B, C, D, E, F)
+pub impl[A : FromRon, B : FromRon, C : FromRon, D : FromRon, E : FromRon, F : FromRon, G : FromRon] FromRon for (A, B, C, D, E, F, G)
+pub impl[A : FromRon, B : FromRon, C : FromRon, D : FromRon, E : FromRon, F : FromRon, G : FromRon, H : FromRon] FromRon for (A, B, C, D, E, F, G, H)
 
 pub(open) trait ToRon {
   fn to_ron(Self, RonOptions) -> RonValue
@@ -223,15 +232,25 @@ pub impl ToRon for Bool
 pub impl ToRon for Byte
 pub impl ToRon for Char
 pub impl ToRon for Int
+pub impl ToRon for Int16
 pub impl ToRon for Int64
 pub impl ToRon for UInt
+pub impl ToRon for UInt16
 pub impl ToRon for UInt64
 pub impl ToRon for Float
 pub impl ToRon for Double
 pub impl ToRon for String
 pub impl[T : ToRon] ToRon for T?
+pub impl[Ok : ToRon, Err : ToRon] ToRon for Result[Ok, Err]
+pub impl[T : ToRon] ToRon for FixedArray[T]
 pub impl ToRon for Bytes
 pub impl[T : ToRon] ToRon for Array[T]
+pub impl[T : ToRon] ToRon for ArrayView[T]
 pub impl[V : ToRon] ToRon for Map[String, V]
 pub impl[A : ToRon, B : ToRon] ToRon for (A, B)
 pub impl[A : ToRon, B : ToRon, C : ToRon] ToRon for (A, B, C)
+pub impl[A : ToRon, B : ToRon, C : ToRon, D : ToRon] ToRon for (A, B, C, D)
+pub impl[A : ToRon, B : ToRon, C : ToRon, D : ToRon, E : ToRon] ToRon for (A, B, C, D, E)
+pub impl[A : ToRon, B : ToRon, C : ToRon, D : ToRon, E : ToRon, F : ToRon] ToRon for (A, B, C, D, E, F)
+pub impl[A : ToRon, B : ToRon, C : ToRon, D : ToRon, E : ToRon, F : ToRon, G : ToRon] ToRon for (A, B, C, D, E, F, G)
+pub impl[A : ToRon, B : ToRon, C : ToRon, D : ToRon, E : ToRon, F : ToRon, G : ToRon, H : ToRon] ToRon for (A, B, C, D, E, F, G, H)
