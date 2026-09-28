@@ -5,6 +5,8 @@
 ### Added
 
 Published as `L76148/moon-ron@0.1.0` on mooncakes.io.
+Repository `main` is published at https://github.com/L76148/moon-ron and the
+GitHub Actions CI workflow passes.
 
 - Generic RON parser with a dynamically typed `RonValue`
 - Canonical compact serializer for every `RonValue` variant

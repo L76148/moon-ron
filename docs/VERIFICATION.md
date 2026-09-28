@@ -19,6 +19,8 @@ Recorded on 2026-09-28.
 | `moon run cmd/ron -- check corpus/typed_values.ron` | passed |
 | `moon publish` | published `L76148/moon-ron@0.1.0` |
 | `moon search L76148/moon-ron` | found version `0.1.0` |
+| `git push origin main` | pushed all commits to GitHub |
+| GitHub Actions run `36421875599` | completed successfully |
 
 The local machine does not have Node.js or a system C compiler, so JavaScript
 runtime execution and Native linking were not available in this environment.
@@ -26,5 +28,6 @@ Static checks for all configured targets passed with
 `moon check --deny-warn --target all`.
 
 This verification covers all six core development milestones plus range and
-typed-codec hardening. The package is published to mooncakes.io. Final
-acceptance still requires pushing the repository and running remote CI.
+typed-codec hardening. The package is published to mooncakes.io, the GitHub
+repository is public, and remote CI passes. The repository is ready for final
+submission and organizer review.
