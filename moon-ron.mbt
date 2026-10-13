@@ -6,7 +6,7 @@
 /// `max_nesting_depth` applies to containers and typed payloads.
 pub fn parse(
   source : StringView,
-  max_nesting_depth? : Int = 128,
+  max_nesting_depth~ : Int32 = 128,
 ) -> RonValue raise RonError {
   parse_document(
     source,
@@ -18,7 +18,7 @@ pub fn parse(
 /// Parse one RON document and return its value and active extensions.
 pub fn parse_document(
   source : StringView,
-  options? : RonOptions = RonOptions::default(),
+  options~ : RonOptions = RonOptions::default(),
 ) -> RonDocument raise RonError {
   if options.max_nesting_depth < 0 {
     raise DepthLimitExceeded(options.max_nesting_depth)

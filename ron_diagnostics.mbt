@@ -93,7 +93,7 @@ fn display_char(char : Char) -> String {
 }
 
 ///|
-fn source_line(source : StringView, line : Int) -> String {
+fn source_line(source : StringView, line : Int32) -> String {
   let lines = Array::from_iter(source.split("\n"))
   match lines.get(line - 1) {
     Some(value) => value.to_owned()
@@ -102,7 +102,7 @@ fn source_line(source : StringView, line : Int) -> String {
 }
 
 ///|
-fn visual_column(line : String, column : Int) -> Int {
+fn visual_column(line : String, column : Int32) -> Int32 {
   let chars = line.to_array()
   let end = if column < chars.length() { column } else { chars.length() }
   let mut width = 0

@@ -1,7 +1,7 @@
 ///|
 priv struct Point {
-  x : Int
-  y : Int
+  x : Int32
+  y : Int32
 } derive(Eq, Debug)
 
 ///|
@@ -51,7 +51,7 @@ impl @moon-ron.FromRon for Shape with fn from_ron(value, path, options) {
 
 ///|
 test "decodes primitive and container types" {
-  let int : Int = @moon-ron.decode("42")
+  let int : Int32 = @moon-ron.decode("42")
   assert_eq(int, 42)
   let int64 : Int64 = @moon-ron.decode("-9223372036854775808")
   assert_eq(int64, -9223372036854775808L)
@@ -59,13 +59,13 @@ test "decodes primitive and container types" {
   assert_eq(uint64, 18446744073709551615UL)
   let flag : Bool = @moon-ron.decode("true")
   assert_eq(flag, true)
-  let values : Array[Int] = @moon-ron.decode("[1, 2, 3]")
+  let values : Array[Int32] = @moon-ron.decode("[1, 2, 3]")
   assert_eq(values, [1, 2, 3])
   let maybe : String? = @moon-ron.decode("Some(\"ok\")")
   assert_eq(maybe, Some("ok"))
-  let pair : (Int, String) = @moon-ron.decode("(1, \"one\")")
+  let pair : (Int32, String) = @moon-ron.decode("(1, \"one\")")
   assert_eq(pair, (1, "one"))
-  let map : Map[String, Int] = @moon-ron.decode("{foo: 1, bar: 2}")
+  let map : Map[String, Int32] = @moon-ron.decode("{foo: 1, bar: 2}")
   assert_eq(map["foo"], 1)
   assert_eq(map["bar"], 2)
 }
@@ -114,7 +114,7 @@ test "reports typed decode errors with paths" {
     _ => fail("expected TypeMismatch")
   }
   try {
-    let _ : (Int, Int) = @moon-ron.decode("(1, 2, 3)")
+    let _ : (Int32, Int32) = @moon-ron.decode("(1, 2, 3)")
     fail("expected a tuple length error")
   } catch {
     @moon-ron.UnexpectedTupleLength(path, expected, actual) => {

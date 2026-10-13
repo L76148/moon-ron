@@ -1,9 +1,9 @@
 ///|
 /// A source position measured in Unicode scalar values.
 pub(all) struct RonPosition {
-  index : Int
-  line : Int
-  column : Int
+  index : Int32
+  line : Int32
+  column : Int32
 } derive(Eq, Debug)
 
 ///|
@@ -17,5 +17,5 @@ pub(all) suberror RonError {
   UnknownExtension(RonPosition, String)
   UnknownAttribute(RonPosition, String)
   InvalidAttribute(RonPosition, String)
-  DepthLimitExceeded(Int)
+  DepthLimitExceeded(Int32)
 } derive(Eq, Debug)

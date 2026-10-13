@@ -79,7 +79,7 @@ pub fn RonExtensions::to_attribute(self : RonExtensions) -> String {
 /// Parsing options and document-level extension defaults.
 pub(all) struct RonOptions {
   extensions : RonExtensions
-  max_nesting_depth : Int
+  max_nesting_depth : Int32
 } derive(Eq, Debug)
 
 ///|
@@ -109,7 +109,7 @@ pub fn RonOptions::with_extensions(
 ///|
 pub fn RonOptions::with_max_nesting_depth(
   self : RonOptions,
-  max_nesting_depth : Int,
+  max_nesting_depth : Int32,
 ) -> RonOptions {
   { extensions: self.extensions, max_nesting_depth, }
 }

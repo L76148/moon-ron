@@ -3,7 +3,7 @@
 ///
 /// `indent` is the number of spaces added for each nesting level. Negative
 /// values are treated as zero. Empty containers remain on one line.
-pub fn to_string_pretty(value : RonValue, indent? : Int = 2) -> String {
+pub fn to_string_pretty(value : RonValue, indent~ : Int32 = 2) -> String {
   let buffer = StringBuilder()
   write_pretty_value(buffer, value, 0, indent.max(0))
   buffer.to_string()
@@ -13,8 +13,8 @@ pub fn to_string_pretty(value : RonValue, indent? : Int = 2) -> String {
 fn write_pretty_value(
   buffer : StringBuilder,
   value : RonValue,
-  level : Int,
-  indent : Int,
+  level : Int32,
+  indent : Int32,
 ) -> Unit {
   match value {
     Unit
@@ -58,8 +58,8 @@ fn write_pretty_value(
 fn write_pretty_values(
   buffer : StringBuilder,
   values : Array[RonValue],
-  level : Int,
-  indent : Int,
+  level : Int32,
+  indent : Int32,
   open : Char,
   close : Char,
 ) -> Unit {
@@ -83,8 +83,8 @@ fn write_pretty_named_values(
   buffer : StringBuilder,
   name : String,
   values : Array[RonValue],
-  level : Int,
-  indent : Int,
+  level : Int32,
+  indent : Int32,
 ) -> Unit {
   buffer.write_string(name)
   if values.length() == 0 {
@@ -97,8 +97,8 @@ fn write_pretty_named_values(
 fn write_pretty_map(
   buffer : StringBuilder,
   entries : Array[(RonValue, RonValue)],
-  level : Int,
-  indent : Int,
+  level : Int32,
+  indent : Int32,
 ) -> Unit {
   buffer.write_char('{')
   if entries.length() == 0 {
@@ -123,8 +123,8 @@ fn write_pretty_fields(
   buffer : StringBuilder,
   name : String,
   fields : Array[(String, RonValue)],
-  level : Int,
-  indent : Int,
+  level : Int32,
+  indent : Int32,
 ) -> Unit {
   buffer.write_string(name)
   if fields.length() == 0 {
@@ -144,7 +144,7 @@ fn write_pretty_fields(
 }
 
 ///|
-fn write_indent(buffer : StringBuilder, level : Int, indent : Int) -> Unit {
+fn write_indent(buffer : StringBuilder, level : Int32, indent : Int32) -> Unit {
   let count = level * indent
   for i = 0; i < count; i = i + 1 {
     buffer.write_char(' ')

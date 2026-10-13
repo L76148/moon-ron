@@ -1,6 +1,6 @@
 ///|
 /// The number of hex digits allowed in a `\u{...}` escape.
-const MAX_UNICODE_DIGITS : Int = 6
+const MAX_UNICODE_DIGITS : Int32 = 6
 
 ///|
 /// The largest value an unsuffixed integer literal can hold.
@@ -86,7 +86,7 @@ fn is_name_continue(char : Char) -> Bool {
 }
 
 ///|
-fn is_digit_of(char : Char, radix : Int) -> Bool {
+fn is_digit_of(char : Char, radix : Int32) -> Bool {
   match radix {
     2 => char == '0' || char == '1'
     8 => char.to_int() >= '0'.to_int() && char.to_int() <= '7'.to_int()
@@ -120,9 +120,9 @@ fn tokenize(source : StringView) -> Array[MonTokenInfo] raise MonError {
 ///|
 priv struct MonLexer {
   chars : Array[Char]
-  mut offset : Int
-  mut line : Int
-  mut column : Int
+  mut offset : Int32
+  mut line : Int32
+  mut column : Int32
 }
 
 ///|
@@ -141,7 +141,7 @@ fn MonLexer::peek(self : MonLexer) -> Char? {
 }
 
 ///|
-fn MonLexer::peek_at(self : MonLexer, distance : Int) -> Char? {
+fn MonLexer::peek_at(self : MonLexer, distance : Int32) -> Char? {
   self.chars.get(self.offset + distance)
 }
 
@@ -506,9 +506,9 @@ fn MonLexer::lex_unicode_escape(
 fn MonLexer::lex_hex_value(
   self : MonLexer,
   start : MonPosition,
-  limit : Int,
+  limit : Int32,
   braced : Bool,
-) -> Int raise MonError {
+) -> Int32 raise MonError {
   let mut value = 0
   let mut digits = 0
   while true {
@@ -725,9 +725,9 @@ fn MonLexer::lex_number(self : MonLexer) -> MonNumber raise MonError {
 fn MonLexer::lex_digits(
   self : MonLexer,
   buffer : StringBuilder,
-  radix : Int,
+  radix : Int32,
   start : MonPosition,
-) -> Int raise MonError {
+) -> Int32 raise MonError {
   let mut digits = 0
   while true {
     match self.peek() {

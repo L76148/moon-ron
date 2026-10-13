@@ -36,16 +36,16 @@ test "escapes text and bytes" {
     @moon-ron.to_string(
       @moon-ron.RonValue::Bytes(
         Bytes::from_array([
-          (65 : Int).to_byte(),
+          (65 : Int32).to_byte(),
           Byte::default(),
-          (255 : Int).to_byte(),
+          (255 : Int32).to_byte(),
         ]),
       ),
     ),
     "b\"A\\x00\\xff\"",
   )
   assert_eq(
-    @moon-ron.to_string(@moon-ron.RonValue::Byte((39 : Int).to_byte())),
+    @moon-ron.to_string(@moon-ron.RonValue::Byte((39 : Int32).to_byte())),
     "b'\\''",
   )
 }
@@ -109,12 +109,12 @@ test "round-trips canonical values" {
     @moon-ron.RonValue::String("\u{1f600} and \"quotes\""),
     @moon-ron.RonValue::Bytes(
       Bytes::from_array([
-        (0 : Int).to_byte(),
-        (127 : Int).to_byte(),
-        (255 : Int).to_byte(),
+        (0 : Int32).to_byte(),
+        (127 : Int32).to_byte(),
+        (255 : Int32).to_byte(),
       ]),
     ),
-    @moon-ron.RonValue::Byte((10 : Int).to_byte()),
+    @moon-ron.RonValue::Byte((10 : Int32).to_byte()),
     @moon-ron.RonValue::Option(None),
     @moon-ron.RonValue::Option(Some(@moon-ron.RonValue::Number(Signed(1L)))),
     @moon-ron.RonValue::Sequence([]),

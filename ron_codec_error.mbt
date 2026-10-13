@@ -3,7 +3,7 @@
 pub(all) enum RonPath {
   Root
   Key(String, RonPath)
-  Index(Int, RonPath)
+  Index(Int32, RonPath)
   Variant(String, RonPath)
 } derive(Eq, Debug)
 
@@ -13,7 +13,7 @@ pub(all) suberror RonDecodeError {
   Syntax(RonError)
   TypeMismatch(RonPath, String, String)
   MissingField(RonPath, String)
-  UnexpectedTupleLength(RonPath, Int, Int)
+  UnexpectedTupleLength(RonPath, Int32, Int32)
   UnknownVariant(RonPath, String)
   InvalidValue(RonPath, String)
 } derive(Eq, Debug)
@@ -29,7 +29,7 @@ pub fn RonPath::add_key(self : RonPath, key : String) -> RonPath {
 }
 
 ///|
-pub fn RonPath::add_index(self : RonPath, index : Int) -> RonPath {
+pub fn RonPath::add_index(self : RonPath, index : Int32) -> RonPath {
   Index(index, self)
 }
 

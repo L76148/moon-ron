@@ -14,7 +14,7 @@ pub(open) trait ToRon {
 /// Decode one RON document into a typed value.
 pub fn[T : FromRon] decode(
   source : StringView,
-  max_nesting_depth? : Int = 128,
+  max_nesting_depth~ : Int32 = 128,
 ) -> T raise RonDecodeError {
   decode_with_options(
     source,
@@ -26,7 +26,7 @@ pub fn[T : FromRon] decode(
 /// Decode one RON document using explicit extension and depth options.
 pub fn[T : FromRon] decode_with_options(
   source : StringView,
-  options? : RonOptions = RonOptions::default(),
+  options~ : RonOptions = RonOptions::default(),
 ) -> T raise RonDecodeError {
   let document = parse_document(source, options~) catch {
     error => raise Syntax(error)
@@ -75,7 +75,7 @@ pub fn[T : ToRon] encode(value : T) -> String {
 /// Encode a typed value with an optional RON extension header.
 pub fn[T : ToRon] encode_with_options(
   value : T,
-  options? : RonOptions = RonOptions::default(),
+  options~ : RonOptions = RonOptions::default(),
 ) -> String {
   let body = to_string(ToRon::to_ron(value, options))
   let attribute = options.extensions.to_attribute()
@@ -162,7 +162,7 @@ pub fn[T : FromRon] field(
 ///|
 pub fn[T : FromRon] positional(
   values : Array[RonValue],
-  index : Int,
+  index : Int32,
   path : RonPath,
   options : RonOptions,
 ) -> T raise RonDecodeError {

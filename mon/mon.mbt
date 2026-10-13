@@ -6,7 +6,7 @@
 /// `max_nesting_depth` applies to containers and constructor arguments.
 pub fn parse(
   source : StringView,
-  max_nesting_depth? : Int = 128,
+  max_nesting_depth~ : Int32 = 128,
 ) -> MonValue raise MonError {
   if max_nesting_depth < 0 {
     raise DepthLimitExceeded(max_nesting_depth)

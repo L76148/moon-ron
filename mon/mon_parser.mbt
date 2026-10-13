@@ -1,14 +1,14 @@
 ///|
 priv struct MonParser {
   tokens : Array[MonTokenInfo]
-  mut index : Int
-  max_nesting_depth : Int
+  mut index : Int32
+  max_nesting_depth : Int32
 }
 
 ///|
 fn MonParser::new(
   source : StringView,
-  max_nesting_depth : Int,
+  max_nesting_depth : Int32,
 ) -> MonParser raise MonError {
   { tokens: tokenize(source), index: 0, max_nesting_depth, }
 }
@@ -81,7 +81,7 @@ fn MonParser::expect(
 ///|
 fn MonParser::parse_value(
   self : MonParser,
-  depth : Int,
+  depth : Int32,
 ) -> MonValue raise MonError {
   if depth > self.max_nesting_depth {
     raise DepthLimitExceeded(self.max_nesting_depth)
@@ -103,7 +103,7 @@ fn MonParser::parse_value(
 fn MonParser::parse_range(
   self : MonParser,
   start : MonValue?,
-  depth : Int,
+  depth : Int32,
 ) -> MonValue raise MonError {
   let inclusive = match self.current().token {
     DotDot => {
@@ -127,7 +127,7 @@ fn MonParser::parse_range(
 ///|
 fn MonParser::parse_atom(
   self : MonParser,
-  depth : Int,
+  depth : Int32,
 ) -> MonValue raise MonError {
   let info = self.current()
   match info.token {
@@ -178,7 +178,7 @@ fn MonParser::parse_atom(
 ///|
 fn MonParser::parse_sequence(
   self : MonParser,
-  depth : Int,
+  depth : Int32,
 ) -> MonValue raise MonError {
   self.expect(LBracket, "`[`")
   let values = []
@@ -206,7 +206,7 @@ fn MonParser::parse_sequence(
 /// `(1, 2)` parses to a tuple.
 fn MonParser::parse_parenthesized(
   self : MonParser,
-  depth : Int,
+  depth : Int32,
 ) -> MonValue raise MonError {
   self.expect(LParen, "`(`")
   match self.current().token {
@@ -254,7 +254,7 @@ fn MonParser::parse_parenthesized(
 /// a `Map` whose key is a string value.
 fn MonParser::parse_braces(
   self : MonParser,
-  depth : Int,
+  depth : Int32,
 ) -> MonValue raise MonError {
   self.expect(LBrace, "`{`")
   match self.current().token {
@@ -289,7 +289,7 @@ fn MonParser::field_follows(self : MonParser) -> Bool {
 ///|
 fn MonParser::parse_fields(
   self : MonParser,
-  depth : Int,
+  depth : Int32,
 ) -> Array[(String, MonValue)] raise MonError {
   let fields = []
   let mut done = false
@@ -319,7 +319,7 @@ fn MonParser::parse_fields(
 ///|
 fn MonParser::parse_map_entries(
   self : MonParser,
-  depth : Int,
+  depth : Int32,
 ) -> Array[(MonValue, MonValue)] raise MonError {
   let entries = []
   let mut done = false
@@ -347,7 +347,7 @@ fn MonParser::parse_map_entries(
 fn MonParser::parse_constructor(
   self : MonParser,
   name : String,
-  depth : Int,
+  depth : Int32,
 ) -> MonValue raise MonError {
   match self.current().token {
     LBrace => {
@@ -365,7 +365,7 @@ fn MonParser::parse_constructor(
 ///|
 fn MonParser::parse_arguments(
   self : MonParser,
-  depth : Int,
+  depth : Int32,
 ) -> Array[MonValue] raise MonError {
   let values = []
   let mut done = false

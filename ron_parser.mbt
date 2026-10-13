@@ -1,12 +1,12 @@
 ///|
 priv struct RonParser {
   source : Array[Char]
-  mut offset : Int
-  max_nesting_depth : Int
+  mut offset : Int32
+  max_nesting_depth : Int32
 }
 
 ///|
-fn RonParser::new(source : StringView, max_nesting_depth : Int) -> RonParser {
+fn RonParser::new(source : StringView, max_nesting_depth : Int32) -> RonParser {
   { source: source.to_array(), offset: 0, max_nesting_depth, }
 }
 
@@ -56,7 +56,7 @@ fn RonParser::peek(self : RonParser) -> Char? {
 }
 
 ///|
-fn RonParser::peek_at(self : RonParser, distance : Int) -> Char? {
+fn RonParser::peek_at(self : RonParser, distance : Int32) -> Char? {
   self.source.get(self.offset + distance)
 }
 
@@ -215,7 +215,7 @@ fn is_type_name(path : String) -> Bool {
 ///|
 fn RonParser::parse_value(
   self : RonParser,
-  depth : Int,
+  depth : Int32,
 ) -> RonValue raise RonError {
   self.skip_trivia()
   if self.peek() == Some('.') && self.peek_at(1) == Some('.') {
@@ -232,7 +232,7 @@ fn RonParser::parse_value(
 ///|
 fn RonParser::parse_value_non_range(
   self : RonParser,
-  depth : Int,
+  depth : Int32,
 ) -> RonValue raise RonError {
   if depth > self.max_nesting_depth {
     raise DepthLimitExceeded(self.max_nesting_depth)
@@ -277,7 +277,7 @@ fn is_range_terminator(char : Char?) -> Bool {
 fn RonParser::parse_range_from(
   self : RonParser,
   start : RonValue,
-  depth : Int,
+  depth : Int32,
 ) -> RonValue raise RonError {
   self.offset = self.offset + 2
   let inclusive = if self.peek() == Some('=') {
@@ -300,7 +300,7 @@ fn RonParser::parse_range_from(
 ///|
 fn RonParser::parse_open_range(
   self : RonParser,
-  depth : Int,
+  depth : Int32,
 ) -> RonValue raise RonError {
   self.expect('.')
   self.expect('.')
@@ -324,7 +324,7 @@ fn RonParser::parse_open_range(
 ///|
 fn RonParser::parse_identifier_value(
   self : RonParser,
-  depth : Int,
+  depth : Int32,
 ) -> RonValue raise RonError {
   let path = self.parse_path()
   self.skip_trivia()
@@ -400,7 +400,7 @@ fn RonParser::parse_comma_or_end(
 ///|
 fn RonParser::parse_tuple(
   self : RonParser,
-  depth : Int,
+  depth : Int32,
 ) -> RonValue raise RonError {
   self.expect('(')
   self.skip_trivia()
@@ -434,7 +434,7 @@ fn RonParser::parse_tuple(
 ///|
 fn RonParser::parse_sequence(
   self : RonParser,
-  depth : Int,
+  depth : Int32,
 ) -> RonValue raise RonError {
   self.expect('[')
   self.skip_trivia()
@@ -455,7 +455,7 @@ fn RonParser::parse_sequence(
 ///|
 fn RonParser::parse_map(
   self : RonParser,
-  depth : Int,
+  depth : Int32,
 ) -> RonValue raise RonError {
   self.expect('{')
   self.skip_trivia()
@@ -494,7 +494,7 @@ fn RonParser::looks_like_named_field(self : RonParser) -> Bool {
 ///|
 fn RonParser::parse_payload(
   self : RonParser,
-  depth : Int,
+  depth : Int32,
 ) -> (Array[(String, RonValue)], Array[RonValue]) raise RonError {
   self.expect('(')
   self.skip_trivia()
@@ -560,14 +560,14 @@ fn RonParser::parse_escape(self : RonParser) -> Char raise RonError {
 ///|
 fn RonParser::parse_hex_digits(
   self : RonParser,
-  count : Int,
-) -> Int raise RonError {
+  count : Int32,
+) -> Int32 raise RonError {
   let mut value = 0
   for i = 0; i < count; i = i + 1 {
     let digit = match self.advance() {
-      Some('0'..='9' as char) => char.to_int() - '0'.to_int()
-      Some('a'..='f' as char) => char.to_int() - 'a'.to_int() + 10
-      Some('A'..='F' as char) => char.to_int() - 'A'.to_int() + 10
+      Some('0'..<='9' as char) => char.to_int() - '0'.to_int()
+      Some('a'..<='f' as char) => char.to_int() - 'a'.to_int() + 10
+      Some('A'..<='F' as char) => char.to_int() - 'A'.to_int() + 10
       Some(_) => raise self.error_escape()
       None => raise self.error_eof()
     }
@@ -577,7 +577,9 @@ fn RonParser::parse_hex_digits(
 }
 
 ///|
-fn RonParser::parse_variable_hex_digits(self : RonParser) -> Int raise RonError {
+fn RonParser::parse_variable_hex_digits(
+  self : RonParser,
+) -> Int32 raise RonError {
   let mut value = 0
   let mut digits = 0
   while self.peek() != Some('}') {
@@ -585,9 +587,9 @@ fn RonParser::parse_variable_hex_digits(self : RonParser) -> Int raise RonError 
       raise self.error_escape()
     }
     let digit = match self.advance() {
-      Some('0'..='9' as char) => char.to_int() - '0'.to_int()
-      Some('a'..='f' as char) => char.to_int() - 'a'.to_int() + 10
-      Some('A'..='F' as char) => char.to_int() - 'A'.to_int() + 10
+      Some('0'..<='9' as char) => char.to_int() - '0'.to_int()
+      Some('a'..<='f' as char) => char.to_int() - 'a'.to_int() + 10
+      Some('A'..<='F' as char) => char.to_int() - 'A'.to_int() + 10
       Some(_) => raise self.error_escape()
       None => raise self.error_eof()
     }
@@ -714,7 +716,7 @@ fn RonParser::parse_raw_byte_string(self : RonParser) -> Bytes raise RonError {
 }
 
 ///|
-fn RonParser::count_raw_hashes(self : RonParser) -> Int {
+fn RonParser::count_raw_hashes(self : RonParser) -> Int32 {
   let mut count = 0
   while self.peek() == Some('#') {
     count = count + 1
@@ -724,7 +726,7 @@ fn RonParser::count_raw_hashes(self : RonParser) -> Int {
 }
 
 ///|
-fn RonParser::consume_hash_suffix(self : RonParser, count : Int) -> Bool {
+fn RonParser::consume_hash_suffix(self : RonParser, count : Int32) -> Bool {
   if count == 0 {
     return true
   }

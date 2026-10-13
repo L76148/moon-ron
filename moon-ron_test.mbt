@@ -60,29 +60,29 @@ test "parses byte values" {
     @moon-ron.parse("b\"A\\x00\\xff\""),
     @moon-ron.RonValue::Bytes(
       Bytes::from_array([
-        (65 : Int).to_byte(),
+        (65 : Int32).to_byte(),
         Byte::default(),
-        (255 : Int).to_byte(),
+        (255 : Int32).to_byte(),
       ]),
     ),
   )
   assert_eq(
     @moon-ron.parse("b'Z'"),
-    @moon-ron.RonValue::Byte((90 : Int).to_byte()),
+    @moon-ron.RonValue::Byte((90 : Int32).to_byte()),
   )
   assert_eq(
     @moon-ron.parse("br#\"raw\\bytes\"#"),
     @moon-ron.RonValue::Bytes(
       Bytes::from_array([
-        (114 : Int).to_byte(),
-        (97 : Int).to_byte(),
-        (119 : Int).to_byte(),
-        (92 : Int).to_byte(),
-        (98 : Int).to_byte(),
-        (121 : Int).to_byte(),
-        (116 : Int).to_byte(),
-        (101 : Int).to_byte(),
-        (115 : Int).to_byte(),
+        (114 : Int32).to_byte(),
+        (97 : Int32).to_byte(),
+        (119 : Int32).to_byte(),
+        (92 : Int32).to_byte(),
+        (98 : Int32).to_byte(),
+        (121 : Int32).to_byte(),
+        (116 : Int32).to_byte(),
+        (101 : Int32).to_byte(),
+        (115 : Int32).to_byte(),
       ]),
     ),
   )

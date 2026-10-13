@@ -11,6 +11,14 @@
 - MON fixtures under `corpus/mon`, plus `docs/MON.md` recording the literal
   mapping that was verified form by form against the MoonBit compiler
 
+### Changed
+
+- Adopted the spelling of the current MoonBit release: `Int` is written
+  `Int32`, and optional arguments use `name~` instead of `name?`. The compiler
+  still accepts both spellings; `moon fmt` on release `0.1.20261012` rewrites
+  the old ones, so the repository now matches what `moon fmt --check` expects
+  on the release that CI installs.
+
 ## 0.1.1
 
 ### Added

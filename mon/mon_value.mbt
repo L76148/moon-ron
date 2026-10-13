@@ -5,9 +5,9 @@
 /// `Int`, `1L` is `Int64`, `1U` is `UInt`, `1UL` is `UInt64`, and a literal
 /// with a fractional part or an exponent is `Double`.
 pub(all) enum MonNumber {
-  Int(Int)
+  Int(Int32)
   Int64(Int64)
-  UInt(UInt)
+  UInt(UInt32)
   UInt64(UInt64)
   Double(Double)
 } derive(Eq, Debug)
@@ -29,7 +29,7 @@ pub(all) struct MonRange {
 pub fn MonRange::new(
   start? : MonValue,
   end? : MonValue,
-  inclusive? : Bool = false,
+  inclusive~ : Bool = false,
 ) -> MonRange {
   { start, end, inclusive, }
 }
@@ -98,7 +98,7 @@ pub fn MonValue::kind(self : MonValue) -> String {
 
 ///|
 /// The number of children a container holds, or `None` for a scalar.
-pub fn MonValue::length(self : MonValue) -> Int? {
+pub fn MonValue::length(self : MonValue) -> Int32? {
   match self {
     Sequence(values) => Some(values.length())
     Tuple(values) => Some(values.length())

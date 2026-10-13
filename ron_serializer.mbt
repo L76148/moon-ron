@@ -242,7 +242,7 @@ fn write_escaped_byte(
 }
 
 ///|
-fn hex_digit(value : Int) -> Char {
+fn hex_digit(value : Int32) -> Char {
   if value < 10 {
     ('0'.to_int() + value).unsafe_to_char()
   } else {

@@ -1,9 +1,9 @@
 ///|
 /// A source position measured in Unicode scalar values.
 pub(all) struct MonPosition {
-  index : Int
-  line : Int
-  column : Int
+  index : Int32
+  line : Int32
+  column : Int32
 } derive(Eq, Debug)
 
 ///|
@@ -16,7 +16,7 @@ pub(all) suberror MonError {
   InvalidEscape(MonPosition)
   InvalidNumber(MonPosition, String)
   InvalidLiteral(MonPosition, String)
-  DepthLimitExceeded(Int)
+  DepthLimitExceeded(Int32)
 } derive(Eq, Debug)
 
 ///|

@@ -34,6 +34,11 @@ repository is ready for final submission and organizer review.
 
 ## MON syntax core (2026-10-13)
 
+Verified with MoonBit `0.1.20261012` (`748b63c`, 2026-10-12), the release that
+`https://cli.moonbitlang.com/install/unix.sh` installs and that CI uses.
+`moon fmt` on this release writes `Int32` and `name~`, so the repository was
+reformatted with it before these checks were recorded.
+
 | Check | Result |
 | --- | --- |
 | `moon check --deny-warn` | passed |

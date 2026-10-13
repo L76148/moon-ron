@@ -60,12 +60,12 @@ pub impl FromRon for Byte with fn from_ron(value, path, _) {
 }
 
 ///|
-pub impl ToRon for Int with fn to_ron(self, _) {
+pub impl ToRon for Int32 with fn to_ron(self, _) {
   Number(Signed(self.to_int64()))
 }
 
 ///|
-pub impl FromRon for Int with fn from_ron(value, path, _) {
+pub impl FromRon for Int32 with fn from_ron(value, path, _) {
   match as_number(value, path, "Int") {
     Signed(value) if value >= -2147483648L && value <= 2147483647L =>
       value.to_int()
@@ -90,12 +90,12 @@ pub impl FromRon for Int64 with fn from_ron(value, path, _) {
 }
 
 ///|
-pub impl ToRon for UInt with fn to_ron(self, _) {
+pub impl ToRon for UInt32 with fn to_ron(self, _) {
   Number(Unsigned(self.to_uint64()))
 }
 
 ///|
-pub impl FromRon for UInt with fn from_ron(value, path, _) {
+pub impl FromRon for UInt32 with fn from_ron(value, path, _) {
   match as_number(value, path, "UInt") {
     Signed(value) if value >= 0L && value <= 4294967295L =>
       value.to_int().reinterpret_as_uint()

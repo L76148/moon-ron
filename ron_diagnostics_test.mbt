@@ -43,7 +43,7 @@ test "renders end of input errors" {
 ///|
 test "renders typed errors with paths" {
   let error : @moon-ron.RonDecodeError = try {
-    let _ : Int = @moon-ron.decode("\"value\"")
+    let _ : Int32 = @moon-ron.decode("\"value\"")
     fail("expected decode error")
   } catch {
     @moon-ron.TypeMismatch(_, _, _) as error => error
@@ -61,7 +61,7 @@ test "renders typed errors with paths" {
 ///|
 test "renders typed syntax errors through the parser renderer" {
   let error : @moon-ron.RonDecodeError = try {
-    let _ : Int = @moon-ron.decode("[1,")
+    let _ : Int32 = @moon-ron.decode("[1,")
     fail("expected decode error")
   } catch {
     @moon-ron.Syntax(_) as error => error

@@ -1,6 +1,6 @@
 ///|
 priv struct Config {
-  count : Int?
+  count : Int32?
 }
 
 ///|

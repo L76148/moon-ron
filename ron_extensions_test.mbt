@@ -1,5 +1,5 @@
 ///|
-priv struct Meters(Int) derive(Eq, Debug)
+priv struct Meters(Int32) derive(Eq, Debug)
 
 ///|
 impl @moon-ron.ToRon for Meters with fn to_ron(self, options) {
@@ -17,7 +17,7 @@ impl @moon-ron.FromRon for Meters with fn from_ron(value, path, options) {
 
 ///|
 priv enum Wrapped {
-  Number(Int)
+  Number(Int32)
 } derive(Eq, Debug)
 
 ///|
@@ -69,9 +69,9 @@ test "rejects unknown attributes and extensions" {
 
 ///|
 test "applies implicit_some during typed decoding" {
-  let value : Int? = @moon-ron.decode("#![enable(implicit_some)]\n42")
+  let value : Int32? = @moon-ron.decode("#![enable(implicit_some)]\n42")
   assert_eq(value, Some(42))
-  let explicit : Int? = @moon-ron.decode("Some(7)")
+  let explicit : Int32? = @moon-ron.decode("Some(7)")
   assert_eq(explicit, Some(7))
   let options = @moon-ron.RonOptions::default().with_extension({
     ..@moon-ron.RonExtensions::empty(),
