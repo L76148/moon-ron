@@ -97,4 +97,6 @@ Verified with MoonBit `0.1.20261012` (`748b63c`, 2026-10-12).
 | `moon run cmd/mon -- to-ron corpus/mon/deployment.mon` | converted after expanding the include and the variables |
 | `moon run cmd/mon -- from-ron corpus/basic.ron`, then `cmd/mon -- check` | converted a RON fixture and read the result back |
 | documents through MON value, RON value, RON text, and back | equal values |
+| `moon publish` as `L76148` | published `L76148/moon-ron@0.2.0` |
+| `moon search L76148/moon-ron` | found version `0.2.0` |
 
