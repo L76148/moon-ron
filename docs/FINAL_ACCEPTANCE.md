@@ -4,14 +4,14 @@
 
 | Requirement | Evidence |
 | --- | --- |
-| MoonBit is the primary implementation language | 3,900+ MoonBit source lines under `moon.mod` |
+| MoonBit is the primary implementation language | 5,400+ MoonBit source lines under `moon.mod` |
 | Public GitHub repository | https://github.com/L76148/moon-ron |
-| Clear commit history | 53 commits, all authored by `L76148 <2237501538@qq.com>` |
-| Clear source structure | Parser, AST, serializer, formatter, diagnostics, typed codec, CLI, examples, corpus |
+| Clear commit history | 58 commits, all authored by `L76148 <2237501538@qq.com>` |
+| Clear source structure | Parser, AST, serializer, formatter, diagnostics, typed codec, MON reader, CLI, examples, corpus |
 | README with goal, installation, usage, examples | `README.md` and `README.mbt.md` |
 | CI covers check, build, and test | `.github/workflows/ci.yml`; latest run `36426269022` passed |
-| Runnable example | `cmd/main`, `cmd/typed`, `cmd/extensions`, and `cmd/ron` |
-| Core-path tests | 49 tests pass on Wasm and Wasm GC |
+| Runnable example | `cmd/main`, `cmd/typed`, `cmd/extensions`, `cmd/ron`, and `cmd/mon` |
+| Core-path tests | 69 tests pass on Wasm and Wasm GC |
 | Published on mooncakes.io | `L76148/moon-ron@0.1.1` |
 | OSI-approved license | Apache-2.0 |
 
@@ -35,4 +35,5 @@ moon run cmd/main
 moon run cmd/typed
 moon run cmd/extensions
 moon run cmd/ron -- check corpus/basic.ron
+moon run cmd/mon -- check corpus/mon/config.mon
 ```

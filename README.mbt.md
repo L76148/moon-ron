@@ -12,6 +12,21 @@ checking or formatting files through a CLI.
 The library core has no runtime dependencies. The CLI uses the official
 `moonbitlang/x/fs` package for file access.
 
+The `mon` package adds MON, a data notation whose literals are MoonBit's own
+literals, so a data document reads like the code around it:
+
+```text
+Config {
+  name: "api",
+  ports: [8080, 8081],
+  limits: { "cpu": 4, "memory": 1024U },
+  window: 1..=10,
+}
+```
+
+`cmd/mon` checks a document, and `docs/MON.md` records every accepted spelling
+together with the forms the MoonBit compiler rejects.
+
 ## Install
 
 ```text

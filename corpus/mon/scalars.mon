@@ -1,0 +1,22 @@
+// Every scalar spelling below is a MoonBit literal, and MON reads it as one.
+[
+  42,
+  -7,
+  0x2A,
+  0o52,
+  0b101010,
+  1_000_000,
+  9_000_000_000L,
+  4_294_967_295U,
+  18_446_744_073_709_551_615UL,
+  3.5,
+  1.25e-3,
+  true,
+  false,
+  'A',
+  '\u{4E2D}',
+  "escaped\ttext",
+  b"raw\x00bytes",
+  b'z',
+  (),
+]

@@ -1,0 +1,87 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "L76148/moon-ron/mon"
+
+import {
+  "moonbitlang/core/debug",
+}
+
+// Values
+pub fn parse(StringView, max_nesting_depth? : Int) -> MonValue raise MonError
+
+pub fn render_error(StringView, MonError) -> String
+
+pub fn valid(StringView) -> Bool
+
+// Errors
+pub(all) suberror MonError {
+  UnexpectedChar(MonPosition, Char)
+  UnexpectedEof(MonPosition)
+  Expected(MonPosition, String)
+  InvalidEscape(MonPosition)
+  InvalidNumber(MonPosition, String)
+  InvalidLiteral(MonPosition, String)
+  DepthLimitExceeded(Int)
+} derive(Eq, @debug.Debug)
+pub fn MonError::equal(Self, Self) -> Bool
+pub fn MonError::not_equal(Self, Self) -> Bool
+pub fn MonError::to_repr(Self) -> @debug.Repr
+
+// Types and methods
+pub(all) enum MonNumber {
+  Int(Int)
+  Int64(Int64)
+  UInt(UInt)
+  UInt64(UInt64)
+  Double(Double)
+} derive(Eq, @debug.Debug)
+pub fn MonNumber::equal(Self, Self) -> Bool
+pub fn MonNumber::not_equal(Self, Self) -> Bool
+pub fn MonNumber::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MonPosition {
+  index : Int
+  line : Int
+  column : Int
+} derive(Eq, @debug.Debug)
+pub fn MonPosition::equal(Self, Self) -> Bool
+pub fn MonPosition::not_equal(Self, Self) -> Bool
+pub fn MonPosition::to_repr(Self) -> @debug.Repr
+
+pub(all) struct MonRange {
+  start : MonValue?
+  end : MonValue?
+  inclusive : Bool
+} derive(Eq, @debug.Debug)
+pub fn MonRange::equal(Self, Self) -> Bool
+pub fn MonRange::new(start? : MonValue, end? : MonValue, inclusive? : Bool) -> Self
+pub fn MonRange::not_equal(Self, Self) -> Bool
+pub fn MonRange::to_repr(Self) -> @debug.Repr
+
+pub(all) enum MonValue {
+  Unit
+  Bool(Bool)
+  Number(MonNumber)
+  Char(Char)
+  String(String)
+  Bytes(Bytes)
+  Byte(Byte)
+  Sequence(Array[MonValue])
+  Tuple(Array[MonValue])
+  Map(Array[(MonValue, MonValue)])
+  Fields(Array[(String, MonValue)])
+  Record(String, Array[(String, MonValue)])
+  TupleVariant(String, Array[MonValue])
+  Variant(String)
+  Range(MonRange)
+} derive(Eq, @debug.Debug)
+pub fn MonValue::equal(Self, Self) -> Bool
+pub fn MonValue::field(Self, String) -> Self?
+pub fn MonValue::kind(Self) -> String
+pub fn MonValue::length(Self) -> Int?
+pub fn MonValue::not_equal(Self, Self) -> Bool
+pub fn MonValue::to_repr(Self) -> @debug.Repr
+pub fn MonValue::variant_name(Self) -> String?
+
+// Type aliases
+
+// Traits

@@ -31,3 +31,23 @@ This verification covers all six core development milestones plus range and
 typed-codec hardening and source-aware diagnostics. The package is published
 to mooncakes.io, the GitHub repository is public, and remote CI passes. The
 repository is ready for final submission and organizer review.
+
+## MON syntax core (2026-10-13)
+
+| Check | Result |
+| --- | --- |
+| `moon check --deny-warn` | passed |
+| `moon check --deny-warn --target all` | passed |
+| `moon test --deny-warn` | 69 of 69 passed (49 RON, 20 MON) |
+| `moon test --deny-warn --target wasm` | 69 of 69 passed |
+| `moon test --deny-warn --target wasm-gc` | 69 of 69 passed |
+| `moon fmt --check` | passed |
+| `moon info` | interfaces generated for `mon` and `cmd/mon` |
+| `moon run cmd/mon -- check corpus/mon/scalars.mon` | `sequence of 19` |
+| `moon run cmd/mon -- check corpus/mon/config.mon` | `record Config with 14 fields` |
+| `moon run cmd/mon -- check corpus/mon/services.mon` | `sequence of 2` |
+| a broken document through `cmd/mon` | printed `error: ... at line 3, column 3` with a caret and exited 1 |
+
+MON's accepted spellings are verified one by one against the MoonBit compiler
+rather than against a similar-looking language; `docs/MON.md` records the
+mapping together with the forms MoonBit rejects.

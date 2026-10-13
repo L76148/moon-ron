@@ -1,0 +1,22 @@
+[
+  Service {
+    name: "api",
+    replicas: 3,
+    protocol: Protocol::Https,
+    timeouts: { connect: 1.5, read: 30.0 },
+    dependents: ["db", "cache"],
+    window: 1..=10,
+    queue: None,
+    flags: { retry: true, debug: false },
+  },
+  Service {
+    name: "worker",
+    replicas: 1,
+    protocol: Protocol::Queue(Backlog { depth: 100 }),
+    timeouts: { connect: 2.0, read: 60.0 },
+    dependents: [],
+    window: 5..,
+    queue: Some(Queue { name: "jobs", durable: true }),
+    flags: { retry: false, debug: false },
+  },
+]

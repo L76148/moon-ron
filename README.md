@@ -96,6 +96,49 @@ moon test --deny-warn
 moon fmt --check
 ```
 
+## MON: data in MoonBit syntax
+
+The `mon` package adds MON, a data notation whose literals are the literals of
+MoonBit itself, so a data document reads like the code around it:
+
+```text
+Config {
+  name: "api",
+  ports: [8080, 8081],
+  limits: { "cpu": 4, "memory": 1024U },
+  window: 1..=10,
+  owner: Some(Point { x: 1, y: 2 }),
+  banner: (
+    #|MON reads data written the way
+    #|MoonBit writes its literals.
+  ),
+}
+```
+
+```text
+let value = @mon.parse(source)
+@mon.valid(source)
+@mon.render_error(source, error)
+```
+
+Every accepted literal is checked against the MoonBit compiler: `#|`
+multiline strings, `\x` byte escapes, `L`/`U`/`UL` integer suffixes, and
+`\u{...}` escapes are read the way MoonBit reads them, and the spellings
+MoonBit rejects (`'\0'`, `"\v"`, `1e10`, `1l`, `/* */`) are rejected here too.
+`docs/MON.md` records the mapping form by form. Only two spellings go beyond an
+expression, because a data document needs them: `Name { field: value }` and
+the `..`/`..=` ranges.
+
+Run the MON reader over the fixtures:
+
+```text
+moon run cmd/mon -- check corpus/mon/config.mon
+moon run cmd/mon -- check corpus/mon/services.mon
+moon run cmd/mon -- check corpus/mon/scalars.mon
+```
+
+MON ships in this module; the published `0.1.1` release predates it.
+
 ## Design notes
 
 The parser keeps syntax and semantic conversion separate. `RonValue` is a
@@ -103,6 +146,10 @@ lossless-enough generic tree for parsing, inspection, and future conversion.
 The serializer emits compact deterministic syntax and keeps numeric type
 boundaries across a parse/serialize round trip. Typed decoding will be added
 as a separate trait layer instead of complicating either operation.
+
+The `mon` package follows the same split: its lexer, parser, and `MonValue`
+never depend on RON, so the two notations can be kept honest on their own and
+joined later by a conversion layer instead of by shared shortcuts.
 
 The project is licensed under Apache-2.0. The RON language and the Rust
 `ron` crate are used as a compatibility reference; no upstream source code is

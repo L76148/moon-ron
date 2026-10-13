@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `mon` package: MON, a data notation written in MoonBit literal syntax, with
+  a lexer, a parser, a dynamically typed `MonValue`, sized numbers, ranges,
+  positioned diagnostics, and `render_error`
+- `cmd/mon` CLI with `check <file>` and `version` commands
+- MON fixtures under `corpus/mon`, plus `docs/MON.md` recording the literal
+  mapping that was verified form by form against the MoonBit compiler
+
 ## 0.1.1
 
 ### Added

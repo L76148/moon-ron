@@ -18,3 +18,17 @@ moon run cmd/ron -- check corpus/basic.ron
 moon run cmd/ron -- format corpus/basic.ron
 moon run cmd/ron -- compact corpus/kitchen_sink.ron
 ```
+
+## MON documents
+
+`corpus/mon` holds the MON fixtures, which the `cmd/mon` reader checks:
+
+- `scalars.mon`: every scalar spelling, including sized integers and bytes
+- `config.mon`: a named record with maps, options, ranges, and a `#|` string
+- `services.mon`: nested records, variants, field maps, and open ranges
+
+```text
+moon run cmd/mon -- check corpus/mon/scalars.mon
+moon run cmd/mon -- check corpus/mon/config.mon
+moon run cmd/mon -- check corpus/mon/services.mon
+```
