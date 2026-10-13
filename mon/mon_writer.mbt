@@ -21,7 +21,12 @@ pub extend MonWriteError with @debug.Debug::{to_repr}
 ///|
 /// Write a MON document in canonical compact form.
 pub fn to_string(value : MonValue) -> String raise MonWriteError {
-  let writer = MonWriter::{ buffer: StringBuilder(), indent: 0, pretty: false, }
+  let writer = MonWriter::{
+    buffer: StringBuilder(),
+    indent: 0,
+    pretty: false,
+    moonbit: false,
+  }
   writer.write(value, 0)
   writer.text()
 }
@@ -39,6 +44,7 @@ pub fn to_string_pretty(
     buffer: StringBuilder(),
     indent: indent.max(0),
     pretty: true,
+    moonbit: false,
   }
   writer.write(value, 0)
   writer.text()
@@ -49,6 +55,8 @@ priv struct MonWriter {
   buffer : StringBuilder
   indent : Int32
   pretty : Bool
+  /// Emit MoonBit source instead of MON text.
+  moonbit : Bool
 }
 
 ///|
@@ -77,7 +85,11 @@ fn MonWriter::write(
     Fields(fields) => self.write_fields(fields, level)
     Record(name, fields) => {
       self.write_name(name)
-      self.buffer.write_char(' ')
+      if self.moonbit {
+        self.buffer.write_string("::")
+      } else {
+        self.buffer.write_char(' ')
+      }
       self.write_fields(fields, level)
     }
     TupleVariant(name, values) => {
@@ -85,7 +97,14 @@ fn MonWriter::write(
       self.write_items(values, level, '(', ')')
     }
     Variant(name) => self.write_name(name)
-    Range(range) => self.write_range(range, level)
+    Range(range) =>
+      if self.moonbit {
+        raise UnrepresentableValue(
+          "MoonBit has no range expression outside a `for` loop",
+        )
+      } else {
+        self.write_range(range, level)
+      }
   }
 }
 

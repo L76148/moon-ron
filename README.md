@@ -141,6 +141,21 @@ moon run cmd/mon -- compact corpus/mon/config.mon
 moon run cmd/mon -- format corpus/mon/services.mon
 ```
 
+A document can also ask for text before it is read: `#include "path"` splices
+another document and `#env "NAME" (fallback)` substitutes a variable, both
+resolved through an injected environment, so `mon expand` assembles a document
+out of a directory and the process environment. `to_moonbit_source` goes the
+other way: it writes the MoonBit binding that holds a value, which is how a
+`.mon` file is inlined into a program instead of being parsed at start-up.
+`cmd/embedded` is a working example, and CI regenerates its source from
+`corpus/mon/embedded.mon` and fails when the result differs.
+
+```text
+moon run cmd/mon -- expand corpus/mon/deployment.mon
+moon run cmd/mon -- gen corpus/mon/embedded.mon config Config
+moon run cmd/embedded
+```
+
 MON ships in this module; the published `0.1.1` release predates it.
 
 ## Design notes

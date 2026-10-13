@@ -1,0 +1,11 @@
+// Assembled from a shared fragment and the environment: expand it with
+//   moon run cmd/mon -- expand corpus/mon/deployment.mon
+[
+  Service {
+    name: "api",
+    replicas: #env "MON_API_REPLICAS" (3),
+    protocol: Protocol::Https,
+    limits: { "cpu": 2, "memory": 512U },
+  },
+  #include "shared/worker.mon"
+]

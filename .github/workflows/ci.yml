@@ -48,3 +48,12 @@ jobs:
           moon run cmd/mon -- check /tmp/config.mon
           moon run cmd/mon -- format corpus/mon/services.mon > /tmp/services.mon
           moon run cmd/mon -- check /tmp/services.mon
+
+      - name: MON preprocessor and generated source
+        run: |
+          moon run cmd/mon -- expand corpus/mon/deployment.mon > /tmp/deployment.mon
+          moon run cmd/mon -- check /tmp/deployment.mon
+          moon run cmd/mon -- gen corpus/mon/embedded.mon config Config > cmd/embedded/generated.mbt
+          moon fmt
+          git diff --exit-code -- cmd/embedded/generated.mbt
+          moon run cmd/embedded

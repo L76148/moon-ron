@@ -26,6 +26,8 @@ moon run cmd/ron -- compact corpus/kitchen_sink.ron
 - `scalars.mon`: every scalar spelling, including sized integers and bytes
 - `config.mon`: a named record with maps, options, ranges, and a `#|` string
 - `services.mon`: nested records, variants, field maps, and open ranges
+- `embedded.mon`: the document that `mon gen` turns into MoonBit source
+- `deployment.mon`: uses `#env` and includes `shared/worker.mon`
 
 ```text
 moon run cmd/mon -- check corpus/mon/scalars.mon
@@ -33,4 +35,6 @@ moon run cmd/mon -- check corpus/mon/config.mon
 moon run cmd/mon -- check corpus/mon/services.mon
 moon run cmd/mon -- compact corpus/mon/config.mon
 moon run cmd/mon -- format corpus/mon/services.mon
+moon run cmd/mon -- expand corpus/mon/deployment.mon
+moon run cmd/mon -- gen corpus/mon/embedded.mon config Config
 ```

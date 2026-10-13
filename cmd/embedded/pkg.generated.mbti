@@ -1,0 +1,15 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "L76148/moon-ron/cmd/embedded"
+
+// Values
+
+// Errors
+
+// Types and methods
+type Config
+
+type Point
+
+// Type aliases
+
+// Traits

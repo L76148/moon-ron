@@ -1,0 +1,8 @@
+// A fragment that the deployment document includes.
+Service {
+  name: "worker",
+  replicas: #env "MON_WORKER_REPLICAS" (1),
+  protocol: Protocol::Queue(Backlog { depth: 100 }),
+  window: #env "MON_WORKER_WINDOW" (1..8),
+  flags: { retry: true, debug: false },
+},

@@ -22,6 +22,59 @@ pub fn render_error(source : StringView, error : MonError) -> String {
 }
 
 ///|
+/// Render a preprocessor error with the source line and a caret.
+///
+/// The position refers to the document that was being expanded, so an error
+/// inside an included document reports that document's line.
+pub fn render_preprocess_error(
+  source : StringView,
+  error : MonPreprocessError,
+) -> String {
+  let message = preprocess_message(error)
+  let position = preprocess_position(error)
+  let line = source_line(source, position.line)
+  let column = visual_column(line, position.column)
+  let caret = String::make(column, ' ')
+  "error: " +
+  message +
+  " at line \{position.line}, column \{position.column + 1}\n  |\n" +
+  position.line.to_string() +
+  " | " +
+  line +
+  "\n  | " +
+  caret +
+  "^"
+}
+
+///|
+fn preprocess_position(error : MonPreprocessError) -> MonPosition {
+  match error {
+    UnknownDirective(position, _) => position
+    MissingArgument(position, _) => position
+    MissingVariable(position, _) => position
+    IncludeNotFound(position, _) => position
+    IncludeCycle(position, _) => position
+    IncludeDepthExceeded(position, _) => position
+  }
+}
+
+///|
+fn preprocess_message(error : MonPreprocessError) -> String {
+  match error {
+    UnknownDirective(_, name) => "unknown directive `" + name + "`"
+    MissingArgument(_, directive) => directive + " needs a quoted argument"
+    MissingVariable(_, name) =>
+      "the variable `" + name + "` is not set and has no fallback"
+    IncludeNotFound(_, path) =>
+      "cannot read the included document `" + path + "`"
+    IncludeCycle(_, path) =>
+      "the document `" + path + "` is already being expanded"
+    IncludeDepthExceeded(_, limit) =>
+      "the maximum include depth \{limit} was exceeded"
+  }
+}
+
+///|
 /// Render a writer error. Writer errors have no source position, because the
 /// value was built in memory rather than read from a document.
 pub fn render_write_error(error : MonWriteError) -> String {

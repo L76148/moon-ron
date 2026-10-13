@@ -6,12 +6,12 @@
 | --- | --- |
 | MoonBit is the primary implementation language | 5,400+ MoonBit source lines under `moon.mod` |
 | Public GitHub repository | https://github.com/L76148/moon-ron |
-| Clear commit history | 61 commits, all authored by `L76148 <2237501538@qq.com>` |
-| Clear source structure | Parser, AST, serializer, formatter, diagnostics, typed codec, MON reader, CLI, examples, corpus |
+| Clear commit history | 62 commits, all authored by `L76148 <2237501538@qq.com>` |
+| Clear source structure | Parser, AST, serializer, formatter, diagnostics, typed codec, MON reader, writer, preprocessor, code generator, CLI, examples, corpus |
 | README with goal, installation, usage, examples | `README.md` and `README.mbt.md` |
 | CI covers check, build, and test | `.github/workflows/ci.yml` runs check, build, test, format, and both corpora on every push |
-| Runnable example | `cmd/main`, `cmd/typed`, `cmd/extensions`, `cmd/ron`, and `cmd/mon` |
-| Core-path tests | 79 tests pass on Wasm and Wasm GC |
+| Runnable example | `cmd/main`, `cmd/typed`, `cmd/extensions`, `cmd/ron`, `cmd/mon`, and `cmd/embedded` |
+| Core-path tests | 91 tests pass on Wasm and Wasm GC |
 | Published on mooncakes.io | `L76148/moon-ron@0.1.1` |
 | OSI-approved license | Apache-2.0 |
 

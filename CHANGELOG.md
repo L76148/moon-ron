@@ -14,6 +14,14 @@
   `to_string_pretty` for multiline output, both guaranteed to read back as an
   equal value, with `MonWriteError` for the shapes the grammar cannot spell
 - `mon compact` and `mon format` commands in `cmd/mon`
+- MON preprocessor: `preprocess` expands `#include "path"` and
+  `#env "NAME" (fallback)` from an injected environment, with cycle, depth,
+  missing-variable, and unreadable-document diagnostics, and leaves directives
+  that only appear inside strings, comments, or `#|` strings alone
+- `to_moonbit_source` writes a MoonBit binding for a document, so a `.mon` file
+  can be inlined into a program; `cmd/embedded` builds and runs the generated
+  source, and CI diffs it against the generator
+- `mon expand` and `mon gen` commands in `cmd/mon`
 
 ### Changed
 

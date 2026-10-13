@@ -2,6 +2,7 @@
 priv suberror CliError {
   Io(String)
   Parse(@moonmon.MonError, String)
+  Preprocess(@moonmon.MonPreprocessError, String)
   Write(@moonmon.MonWriteError)
   Usage(String)
 }
@@ -11,6 +12,7 @@ fn CliError::to_string(self : CliError) -> String {
   match self {
     Io(message) => "io error: " + message
     Parse(error, source) => @moonmon.render_error(source, error)
+    Preprocess(error, source) => @moonmon.render_preprocess_error(source, error)
     Write(error) => @moonmon.render_write_error(error)
     Usage(message) => "usage error: " + message
   }
@@ -20,11 +22,71 @@ fn CliError::to_string(self : CliError) -> String {
 fn usage() -> String {
   (
     #|Usage:
-    #|  mon check <file>     parse a MON document and report its shape
-    #|  mon compact <file>   print the document in canonical compact form
-    #|  mon format <file>    print the document with multiline formatting
-    #|  mon version          print the module version
+    #|  mon check <file>        parse a MON document and report its shape
+    #|  mon compact <file>      print the document in canonical compact form
+    #|  mon format <file>       print the document with multiline formatting
+    #|  mon expand <file>       print the document with its directives expanded
+    #|  mon gen <file> [name [type]]
+    #|                          print MoonBit source that holds the document
+    #|  mon version             print the module version
   )
+}
+
+///|
+/// Read a file, or `None` when it cannot be read.
+fn read_file(path : String) -> String? {
+  Some(@fs.read_file_to_string(path)) catch {
+    @fs.IOError(_) => None
+  }
+}
+
+///|
+/// Read a document, reporting a failed read as a CLI error.
+fn read_document(path : String) -> String raise CliError {
+  match read_file(path) {
+    Some(text) => text
+    None => raise Io("cannot read " + path)
+  }
+}
+
+///|
+/// The directory part of a path, used to resolve `#include` paths.
+fn base_directory(path : String) -> String {
+  let mut end = -1
+  for i = 0; i < path.length(); i = i + 1 {
+    match path.get_char(i) {
+      Some(char) => if char == '/' || char == '\\' { end = i }
+      None => ()
+    }
+  }
+  if end < 0 {
+    ""
+  } else {
+    path.unsafe_substring(start=0, end=end + 1)
+  }
+}
+
+///|
+/// Resolve an include path against the directory of the root document.
+fn resolve_path(base : String, path : String) -> String {
+  match path.get_char(0) {
+    Some('/') | Some('\\') => path
+    _ =>
+      match path.get_char(1) {
+        Some(':') => path
+        _ => base + path
+      }
+  }
+}
+
+///|
+/// The variables and documents of the running environment.
+fn environment_for(path : String) -> @moonmon.MonEnvironment {
+  let base = base_directory(path)
+  {
+    lookup: fn(name) { @env.get_env_var(name.to_owned()) },
+    read: fn(target) { read_file(resolve_path(base, target.to_owned())) },
+  }
 }
 
 ///|
@@ -34,6 +96,30 @@ fn parse_source(path : String, source : StringView) -> String raise CliError {
     error => raise Parse(error, source.to_owned())
   }
   "ok: " + path + " -> " + describe(value)
+}
+
+///|
+fn expand_source(path : String, source : StringView) -> String raise CliError {
+  @moonmon.preprocess(source, environment=environment_for(path)) catch {
+    error => raise Preprocess(error, source.to_owned())
+  }
+}
+
+///|
+/// Print MoonBit source for a document, with its directives expanded first.
+fn generate_source(
+  path : String,
+  source : StringView,
+  name : String,
+  type_name : String,
+) -> String raise CliError {
+  let expanded = expand_source(path, source)
+  let value = @moonmon.parse(expanded) catch {
+    error => raise Parse(error, expanded)
+  }
+  @moonmon.to_moonbit_source(value, name~, type_name~) catch {
+    error => raise Write(error)
+  }
 }
 
 ///|
@@ -79,25 +165,17 @@ fn run(args : Array[String]) -> Unit raise CliError {
     [] => println(usage())
     ["--help"] | ["help"] => println(usage())
     ["version"] => println("moon-mon 0.1.0")
-    ["check", path] => {
-      let source = @fs.read_file_to_string(path) catch {
-        @fs.IOError(message) => raise Io(message)
-      }
-      println(parse_source(path, source))
-    }
-    ["compact", path] => {
-      let source = @fs.read_file_to_string(path) catch {
-        @fs.IOError(message) => raise Io(message)
-      }
-      println(compact_source(source))
-    }
-    ["format", path] => {
-      let source = @fs.read_file_to_string(path) catch {
-        @fs.IOError(message) => raise Io(message)
-      }
-      println(format_source(source))
-    }
-    _ => raise Usage("expected `check`, `compact`, or `format` with one file")
+    ["check", path] => println(parse_source(path, read_document(path)))
+    ["compact", path] => println(compact_source(read_document(path)))
+    ["format", path] => println(format_source(read_document(path)))
+    ["expand", path] => println(expand_source(path, read_document(path)))
+    ["gen", path] =>
+      println(generate_source(path, read_document(path), "value", ""))
+    ["gen", path, name] =>
+      println(generate_source(path, read_document(path), name, ""))
+    ["gen", path, name, type_name] =>
+      println(generate_source(path, read_document(path), name, type_name))
+    _ => raise Usage("expected a command and one file, and a name for `gen`")
   }
 }
 

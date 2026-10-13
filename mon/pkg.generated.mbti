@@ -8,9 +8,15 @@ import {
 // Values
 pub fn parse(StringView, max_nesting_depth? : Int) -> MonValue raise MonError
 
+pub fn preprocess(StringView, environment? : MonEnvironment, max_include_depth? : Int) -> String raise MonPreprocessError
+
 pub fn render_error(StringView, MonError) -> String
 
+pub fn render_preprocess_error(StringView, MonPreprocessError) -> String
+
 pub fn render_write_error(MonWriteError) -> String
+
+pub fn to_moonbit_source(MonValue, name? : String, type_name? : String) -> String raise MonWriteError
 
 pub fn to_string(MonValue) -> String raise MonWriteError
 
@@ -32,6 +38,18 @@ pub fn MonError::equal(Self, Self) -> Bool
 pub fn MonError::not_equal(Self, Self) -> Bool
 pub fn MonError::to_repr(Self) -> @debug.Repr
 
+pub(all) suberror MonPreprocessError {
+  UnknownDirective(MonPosition, String)
+  MissingArgument(MonPosition, String)
+  MissingVariable(MonPosition, String)
+  IncludeNotFound(MonPosition, String)
+  IncludeCycle(MonPosition, String)
+  IncludeDepthExceeded(MonPosition, Int)
+} derive(Eq, @debug.Debug)
+pub fn MonPreprocessError::equal(Self, Self) -> Bool
+pub fn MonPreprocessError::not_equal(Self, Self) -> Bool
+pub fn MonPreprocessError::to_repr(Self) -> @debug.Repr
+
 pub(all) suberror MonWriteError {
   UnrepresentableNumber(MonNumber)
   UnrepresentableValue(String)
@@ -42,6 +60,12 @@ pub fn MonWriteError::not_equal(Self, Self) -> Bool
 pub fn MonWriteError::to_repr(Self) -> @debug.Repr
 
 // Types and methods
+pub(all) struct MonEnvironment {
+  lookup : (StringView) -> String?
+  read : (StringView) -> String?
+}
+pub fn MonEnvironment::default() -> Self
+
 pub(all) enum MonNumber {
   Int(Int)
   Int64(Int64)

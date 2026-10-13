@@ -63,3 +63,21 @@ mapping together with the forms MoonBit rejects.
 GitHub Actions run `38406824588` (commit `6208d29`) completed successfully
 with the same release installed from the official one-line installer.
 
+## MON preprocessor and generated source (2026-10-13)
+
+Verified with MoonBit `0.1.20261012` (`748b63c`, 2026-10-12).
+
+| Check | Result |
+| --- | --- |
+| `moon check --deny-warn` | passed |
+| `moon check --deny-warn --target all` | passed |
+| `moon test --deny-warn` | 91 of 91 passed (49 RON, 42 MON) |
+| `moon test --deny-warn --target wasm-gc` | 91 of 91 passed |
+| `moon fmt --check` | passed |
+| `moon run cmd/mon -- expand corpus/mon/deployment.mon` | spliced `shared/worker.mon` and used both variable fallbacks |
+| the expanded document through `cmd/mon -- check` | `sequence of 2` |
+| `moon run cmd/mon -- gen corpus/mon/embedded.mon config Config` | printed the binding committed in `cmd/embedded/generated.mbt` |
+| regenerating that file, running `moon fmt`, then `git diff --exit-code` | no difference |
+| `moon run cmd/embedded` | printed `moon-mon 0.1.0 listens on 2 ports with 2 limits, owner 1,2, ...` |
+| a document that mentions directives inside strings, comments, and `#|` strings | came back unchanged |
+

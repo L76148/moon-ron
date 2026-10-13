@@ -140,3 +140,72 @@ Two shapes raise a `MonWriteError` instead of producing text that would not
 read back: a double that is an infinity or a NaN, which MoonBit has no literal
 for, and a name or field name that is not a MON name. The reader can never
 produce either, so a parsed document always round-trips.
+
+## Directives
+
+A document can ask for text before it is read. `preprocess` expands the
+directives and returns a plain MON document, so the reader stays a reader:
+
+```text
+let source = @mon.preprocess(document, environment=environment)
+let value = @mon.parse(source)
+```
+
+- `#include "path"` is replaced by that document, expanded with the same
+  environment. The environment decides what a path means, so a document can be
+  assembled from a directory, from memory, or from a test fixture, and the
+  preprocessor reports a cycle, a document it cannot read, and an include that
+  nests deeper than `max_include_depth`.
+- `#env "NAME"` is replaced by the value of that variable, and
+  `#env "NAME" (fallback)` uses the parenthesised document when the variable is
+  not set. The value of a variable is MON text, so `MON_PORTS="[8080, 8081]"`
+  works as well as `MON_PORTS=8080`, and the parentheses keep a fallback from
+  swallowing the punctuation around it:
+
+```text
+Config {
+  replicas: #env "REPLICAS" (3),
+  window: #env "WINDOW" (1..8),
+}
+```
+
+Directives are only recognised outside strings, characters, comments, and `#|`
+multiline strings, so a document that talks *about* directives stays a
+document:
+
+```text
+[
+  "#include \"a.mon\"",   // a string, not a directive
+  // #env "PORT" (1)      // a comment, not a directive
+]
+```
+
+## Generating MoonBit source
+
+`to_moonbit_source` writes a MoonBit binding for a value, which inlines a
+document into a program instead of parsing it at start-up:
+
+```text
+@mon.to_moonbit_source(value, name="config", type_name="Config")
+```
+
+```text
+let config : Config = Config::{
+  name: "api",
+  ports: [
+    8080,
+  ],
+}
+```
+
+A named record gains the `::` MoonBit asks for, an integral double keeps its
+fractional part, and a range is refused because MoonBit has no range expression
+outside a `for` loop. The names in the document become MoonBit names, so a
+field that collides with a reserved word such as `sealed` is a document the
+generator cannot express.
+
+`cmd/embedded` is the compile-time proof of this path: its `generated.mbt`
+holds the output of
+`moon run cmd/mon -- gen corpus/mon/embedded.mon config Config`, CI regenerates
+that file from the document, formats it, and fails when the result differs, and
+the package is built and run.
