@@ -15,7 +15,7 @@ The library core has no runtime dependencies. The CLI uses the official
 ## Install
 
 ```text
-moon add L76148/moon-ron@0.1.1
+moon add L76148/moon-ron@0.2.0
 ```
 
 ## Why RON
@@ -161,7 +161,7 @@ values, and `mon to-ron <file>` / `mon from-ron <file>` pass documents between
 the two CLIs in either direction, so the same data can be written in MoonBit
 syntax or in RON.
 
-MON ships in this module; the published `0.1.1` release predates it.
+MON ships in this module from `0.2.0` on.
 
 ## Design notes
 

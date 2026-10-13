@@ -30,7 +30,7 @@ together with the forms the MoonBit compiler rejects.
 ## Install
 
 ```text
-moon add L76148/moon-ron@0.1.1
+moon add L76148/moon-ron@0.2.0
 ```
 
 ## Why RON

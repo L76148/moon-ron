@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
 
 ### Added
 
@@ -34,6 +34,8 @@
   still accepts both spellings; `moon fmt` on release `0.1.20261012` rewrites
   the old ones, so the repository now matches what `moon fmt --check` expects
   on the release that CI installs.
+- Published to mooncakes.io as `L76148/moon-ron@0.2.0`, which is the first
+  release that contains the `mon` and `mon_ron` packages.
 
 ## 0.1.1
 

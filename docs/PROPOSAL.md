@@ -27,12 +27,12 @@ Mooncakes 现有 JSON、TOML、YAML、KDL、HCL 等包不能完整表达 RON 的
 
 ## 预期验收产物
 
-- 可直接通过 `moon add L76148/moon-ron@0.1.1` 使用的 MoonBit 库；
+- 可直接通过 `moon add L76148/moon-ron@0.2.0` 使用的 MoonBit 库；
 - 可运行命令：`moon run cmd/ron -- check|format|compact <file>`；
 - 49 个测试覆盖解析、序列化、格式化、扩展、range、类型化转换、诊断和 CLI；
 - README、API 文档、迁移说明、第三方许可证说明和完整示例；
 - Apache-2.0 根许可证；
-- 已发布至 mooncakes.io：`L76148/moon-ron@0.1.1`。
+- 已发布至 mooncakes.io：`L76148/moon-ron@0.2.0`。
 
 ## 移植或参考说明
 
