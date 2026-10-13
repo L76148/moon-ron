@@ -56,3 +56,6 @@ reformatted with it before these checks were recorded.
 MON's accepted spellings are verified one by one against the MoonBit compiler
 rather than against a similar-looking language; `docs/MON.md` records the
 mapping together with the forms MoonBit rejects.
+
+GitHub Actions run `38406824588` (commit `6208d29`) completed successfully
+with the same release installed from the official one-line installer.
