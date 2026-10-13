@@ -22,6 +22,10 @@
   can be inlined into a program; `cmd/embedded` builds and runs the generated
   source, and CI diffs it against the generator
 - `mon expand` and `mon gen` commands in `cmd/mon`
+- `mon_ron` package: `to_ron` and `from_ron` convert between the two notations,
+  with `MonConvertError` for the shapes only one of them can spell, and
+  `mon to-ron` and `mon from-ron` commands that pass documents between the two
+  CLIs
 
 ### Changed
 

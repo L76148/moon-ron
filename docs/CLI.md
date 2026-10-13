@@ -30,6 +30,8 @@ moon run cmd/mon -- compact <file>
 moon run cmd/mon -- format <file>
 moon run cmd/mon -- expand <file>
 moon run cmd/mon -- gen <file> [name [type]]
+moon run cmd/mon -- to-ron <file>
+moon run cmd/mon -- from-ron <file>
 moon run cmd/mon -- version
 ```
 
@@ -39,6 +41,10 @@ the multiline form. `expand` resolves `#include` and `#env` against the
 directory of the given file and the process environment. `gen` prints the
 MoonBit binding that holds the document, which is how a `.mon` file is inlined
 into a program.
+
+`to-ron` expands the document's directives and prints the RON that holds the
+same data, and `from-ron` reads a RON document and prints the MON that holds
+it, so `cmd/ron` and `cmd/mon` can hand documents to each other.
 
 Invalid documents produce a nonzero exit status and a diagnostic on standard
 error, with the source line, column, and caret. `docs/MON.md` describes the

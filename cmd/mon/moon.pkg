@@ -1,5 +1,7 @@
 import {
+  "L76148/moon-ron" @ron,
   "L76148/moon-ron/mon" @moonmon,
+  "L76148/moon-ron/mon_ron",
   "moonbitlang/core/env",
   "moonbitlang/x/fs",
   "moonbitlang/x/sys",

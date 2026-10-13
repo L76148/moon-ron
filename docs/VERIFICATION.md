@@ -81,3 +81,20 @@ Verified with MoonBit `0.1.20261012` (`748b63c`, 2026-10-12).
 | `moon run cmd/embedded` | printed `moon-mon 0.1.0 listens on 2 ports with 2 limits, owner 1,2, ...` |
 | a document that mentions directives inside strings, comments, and `#|` strings | came back unchanged |
 
+## MON to RON conversion (2026-10-13)
+
+Verified with MoonBit `0.1.20261012` (`748b63c`, 2026-10-12).
+
+| Check | Result |
+| --- | --- |
+| `moon check --deny-warn` | passed |
+| `moon check --deny-warn --target all` | passed |
+| `moon test --deny-warn` | 98 of 98 passed (49 RON, 42 MON, 7 bridge) |
+| `moon test --deny-warn --target wasm-gc` | 98 of 98 passed |
+| `moon fmt --check` | passed |
+| `moon run cmd/mon -- to-ron corpus/mon/embedded.mon` then `cmd/ron -- check` | the RON document reads back |
+| that RON document through `cmd/mon -- from-ron`, then `cmd/mon -- check` | `record Config with 9 fields` |
+| `moon run cmd/mon -- to-ron corpus/mon/deployment.mon` | converted after expanding the include and the variables |
+| `moon run cmd/mon -- from-ron corpus/basic.ron`, then `cmd/mon -- check` | converted a RON fixture and read the result back |
+| documents through MON value, RON value, RON text, and back | equal values |
+

@@ -17,8 +17,8 @@ MoonBit literal syntax, and it grows under the same rules.
    the `mon check` CLI
 9. [x] MON writer: canonical output and a formatter for MON documents
 10. [x] MON preprocessor: directive expansion and MoonBit source generation
-11. [ ] MON to RON bridge: `ToRon`/`FromRon` for MON documents and
-    `mon convert`
+11. [x] MON to RON bridge: value conversion in `mon_ron`, plus the
+    `mon to-ron` and `mon from-ron` commands
 
 Each increment must pass the repository CI and be usable without requiring
 unfinished later increments.

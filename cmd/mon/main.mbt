@@ -4,6 +4,8 @@ priv suberror CliError {
   Parse(@moonmon.MonError, String)
   Preprocess(@moonmon.MonPreprocessError, String)
   Write(@moonmon.MonWriteError)
+  RonParse(@ron.RonError, String)
+  Convert(@mon_ron.MonConvertError)
   Usage(String)
 }
 
@@ -14,6 +16,8 @@ fn CliError::to_string(self : CliError) -> String {
     Parse(error, source) => @moonmon.render_error(source, error)
     Preprocess(error, source) => @moonmon.render_preprocess_error(source, error)
     Write(error) => @moonmon.render_write_error(error)
+    RonParse(error, source) => @ron.render_error(source, error)
+    Convert(error) => "error: " + @mon_ron.MonConvertError::message(error)
     Usage(message) => "usage error: " + message
   }
 }
@@ -28,8 +32,35 @@ fn usage() -> String {
     #|  mon expand <file>       print the document with its directives expanded
     #|  mon gen <file> [name [type]]
     #|                          print MoonBit source that holds the document
+    #|  mon to-ron <file>       convert the document to RON
+    #|  mon from-ron <file>     convert a RON document to MON
     #|  mon version             print the module version
   )
+}
+
+///|
+/// Convert a MON document into RON, with its directives expanded first.
+fn to_ron_source(path : String, source : StringView) -> String raise CliError {
+  let expanded = expand_source(path, source)
+  let value = @moonmon.parse(expanded) catch {
+    error => raise Parse(error, expanded)
+  }
+  let converted = @mon_ron.to_ron(value) catch { error => raise Convert(error) }
+  @ron.to_string(converted)
+}
+
+///|
+/// Convert a RON document into MON.
+fn from_ron_source(source : StringView) -> String raise CliError {
+  let value = @ron.parse(source) catch {
+    error => raise RonParse(error, source.to_owned())
+  }
+  let converted = @mon_ron.from_ron(value) catch {
+    error => raise Convert(error)
+  }
+  @moonmon.to_string(converted) catch {
+    error => raise Write(error)
+  }
 }
 
 ///|
@@ -175,6 +206,8 @@ fn run(args : Array[String]) -> Unit raise CliError {
       println(generate_source(path, read_document(path), name, ""))
     ["gen", path, name, type_name] =>
       println(generate_source(path, read_document(path), name, type_name))
+    ["to-ron", path] => println(to_ron_source(path, read_document(path)))
+    ["from-ron", path] => println(from_ron_source(read_document(path)))
     _ => raise Usage("expected a command and one file, and a name for `gen`")
   }
 }

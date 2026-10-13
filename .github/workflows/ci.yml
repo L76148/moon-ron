@@ -57,3 +57,14 @@ jobs:
           moon fmt
           git diff --exit-code -- cmd/embedded/generated.mbt
           moon run cmd/embedded
+
+      - name: MON and RON conversion
+        run: |
+          moon run cmd/mon -- to-ron corpus/mon/embedded.mon > /tmp/embedded.ron
+          moon run cmd/ron -- check /tmp/embedded.ron
+          moon run cmd/mon -- from-ron /tmp/embedded.ron > /tmp/embedded.mon
+          moon run cmd/mon -- check /tmp/embedded.mon
+          moon run cmd/mon -- to-ron corpus/mon/deployment.mon > /tmp/deployment.ron
+          moon run cmd/ron -- check /tmp/deployment.ron
+          moon run cmd/mon -- from-ron corpus/basic.ron > /tmp/basic.mon
+          moon run cmd/mon -- check /tmp/basic.mon

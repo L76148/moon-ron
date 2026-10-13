@@ -209,3 +209,36 @@ holds the output of
 `moon run cmd/mon -- gen corpus/mon/embedded.mon config Config`, CI regenerates
 that file from the document, formats it, and fails when the result differs, and
 the package is built and run.
+
+## RON
+
+The `mon_ron` package converts between the two notations, which share one data
+model:
+
+```text
+let ron = @mon_ron.to_ron(value)
+let value = @mon_ron.from_ron(ron)
+```
+
+`mon to-ron <file>` and `mon from-ron <file>` do the same from the CLI, and
+`to-ron` expands directives first, so a document that includes fragments
+converts after it has been assembled.
+
+The mapping follows what each reader produces, so the text survives the
+crossing: `Some(1)` and `None` become a RON `Option`, `Name { field: value }`
+becomes a RON struct, `Name(value)` a tuple struct, and a qualified name an
+enum. A MON field map `{ field: value }` becomes a RON map with identifier
+keys, which is the shape RON reads that text back as. RON keeps a single number
+type, so a value that fits `Int` or `UInt` is written with the narrower MON
+type, and MON's range maps to RON's range.
+
+Three shapes belong to only one notation, and converting them reports an error
+instead of rewriting them quietly: RON's bare identifiers such as `foo` have no
+MON value, RON's infinities and NaN have no MoonBit literal, and `Some` with a
+number of values other than one has no RON option. `MonConvertError` carries
+those three cases and `message` renders them.
+
+The conversion is a pair of functions rather than `ToRon`/`FromRon`
+implementations: MoonBit rejects an implementation of a foreign trait for a
+foreign type, and letting either core package depend on the other would undo
+the split that keeps MON a notation and RON a notation.

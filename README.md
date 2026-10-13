@@ -156,6 +156,11 @@ moon run cmd/mon -- gen corpus/mon/embedded.mon config Config
 moon run cmd/embedded
 ```
 
+The `mon_ron` package then crosses notations: `to_ron` and `from_ron` convert
+values, and `mon to-ron <file>` / `mon from-ron <file>` pass documents between
+the two CLIs in either direction, so the same data can be written in MoonBit
+syntax or in RON.
+
 MON ships in this module; the published `0.1.1` release predates it.
 
 ## Design notes
