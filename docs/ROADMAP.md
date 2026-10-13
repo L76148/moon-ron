@@ -15,7 +15,7 @@ MoonBit literal syntax, and it grows under the same rules.
 
 8. [x] MON syntax core: lexer, parser, `MonValue`, positioned diagnostics, and
    the `mon check` CLI
-9. [ ] MON writer: canonical output and a formatter for MON documents
+9. [x] MON writer: canonical output and a formatter for MON documents
 10. [ ] MON preprocessor: directive expansion and MoonBit source generation
 11. [ ] MON to RON bridge: `ToRon`/`FromRon` for MON documents and
     `mon convert`

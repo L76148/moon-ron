@@ -119,6 +119,8 @@ Config {
 let value = @mon.parse(source)
 @mon.valid(source)
 @mon.render_error(source, error)
+let source = @mon.to_string(value)
+let readable = @mon.to_string_pretty(value, indent=2)
 ```
 
 Every accepted literal is checked against the MoonBit compiler: `#|`
@@ -135,6 +137,8 @@ Run the MON reader over the fixtures:
 moon run cmd/mon -- check corpus/mon/config.mon
 moon run cmd/mon -- check corpus/mon/services.mon
 moon run cmd/mon -- check corpus/mon/scalars.mon
+moon run cmd/mon -- compact corpus/mon/config.mon
+moon run cmd/mon -- format corpus/mon/services.mon
 ```
 
 MON ships in this module; the published `0.1.1` release predates it.

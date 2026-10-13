@@ -22,6 +22,32 @@ pub fn render_error(source : StringView, error : MonError) -> String {
 }
 
 ///|
+/// Render a writer error. Writer errors have no source position, because the
+/// value was built in memory rather than read from a document.
+pub fn render_write_error(error : MonWriteError) -> String {
+  let message = match error {
+    UnrepresentableNumber(number) =>
+      "the number " +
+      number_spelling(number) +
+      " has no MoonBit literal, so a MON document cannot hold it"
+    UnrepresentableValue(message) => message
+    InvalidName(name) => "`" + name + "` is not a MON name"
+  }
+  "error: " + message
+}
+
+///|
+fn number_spelling(number : MonNumber) -> String {
+  match number {
+    Int(value) => value.to_string()
+    Int64(value) => value.to_string() + "L"
+    UInt(value) => value.to_string() + "U"
+    UInt64(value) => value.to_string() + "UL"
+    Double(value) => value.to_string()
+  }
+}
+
+///|
 fn error_position(error : MonError) -> MonPosition? {
   match error {
     UnexpectedChar(position, _) => Some(position)

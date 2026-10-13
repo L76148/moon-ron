@@ -26,11 +26,14 @@ syntax:
 
 ```text
 moon run cmd/mon -- check <file>
+moon run cmd/mon -- compact <file>
+moon run cmd/mon -- format <file>
 moon run cmd/mon -- version
 ```
 
 `check` parses the document and reports its shape (`ok: path -> record Config
-with 14 fields`). Invalid documents produce a nonzero exit status and a
+with 14 fields`). `compact` and `format` print the canonical compact form and
+the multiline form. Invalid documents produce a nonzero exit status and a
 diagnostic on standard error, with the source line, column, and caret.
-The writer, the preprocessor, and the RON conversion commands arrive in later
-increments; see `docs/ROADMAP.md`.
+The preprocessor and the RON conversion commands arrive in later increments;
+see `docs/ROADMAP.md`.

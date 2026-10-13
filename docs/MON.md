@@ -110,3 +110,33 @@ reinterpretation of MoonBit syntax; it is MoonBit syntax.
 MON rejects `1_` and `1__0` even though the compiler accepts them. A digit
 separator has to sit between digits, which keeps the spelling unambiguous for
 other tools that read the same files.
+
+## Writing
+
+`to_string` writes the canonical compact form and `to_string_pretty` writes the
+multiline form. Both produce text that `parse` reads back as an equal value,
+and `mon compact` and `mon format` do the same from the CLI.
+
+```text
+let source = @mon.to_string(value)
+let readable = @mon.to_string_pretty(value, indent=2)
+```
+
+The output is canonical rather than literal-preserving: `0x2A` comes back as
+`42`, `1.25e-3` as `0.00125`, and a `#|` string as one escaped line. What
+matters for reading back is kept:
+
+- an integral double keeps a fractional part (`3.0`) and a printed exponent
+  gains one (`1.0e-7`), so the text reads as a `Double` and not as an `Int`;
+- sized integers keep their suffix (`9000000000L`, `4294967295U`,
+  `18446744073709551615UL`);
+- bytes use the two-digit `\x..` escape outside printable ASCII, and strings
+  use `\u{...}` for control characters;
+- a one-element tuple is written `(1,)`, because MoonBit has no one-element
+  tuple and `(1)` is just `1`;
+- empty containers stay `[]`, `{}`, and `()`.
+
+Two shapes raise a `MonWriteError` instead of producing text that would not
+read back: a double that is an infinity or a NaN, which MoonBit has no literal
+for, and a name or field name that is not a MON name. The reader can never
+produce either, so a parsed document always round-trips.

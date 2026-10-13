@@ -2,6 +2,7 @@
 priv suberror CliError {
   Io(String)
   Parse(@moonmon.MonError, String)
+  Write(@moonmon.MonWriteError)
   Usage(String)
 }
 
@@ -10,6 +11,7 @@ fn CliError::to_string(self : CliError) -> String {
   match self {
     Io(message) => "io error: " + message
     Parse(error, source) => @moonmon.render_error(source, error)
+    Write(error) => @moonmon.render_write_error(error)
     Usage(message) => "usage error: " + message
   }
 }
@@ -18,8 +20,10 @@ fn CliError::to_string(self : CliError) -> String {
 fn usage() -> String {
   (
     #|Usage:
-    #|  mon check <file>   parse a MON document and report its shape
-    #|  mon version        print the module version
+    #|  mon check <file>     parse a MON document and report its shape
+    #|  mon compact <file>   print the document in canonical compact form
+    #|  mon format <file>    print the document with multiline formatting
+    #|  mon version          print the module version
   )
 }
 
@@ -30,6 +34,26 @@ fn parse_source(path : String, source : StringView) -> String raise CliError {
     error => raise Parse(error, source.to_owned())
   }
   "ok: " + path + " -> " + describe(value)
+}
+
+///|
+fn compact_source(source : StringView) -> String raise CliError {
+  let value = @moonmon.parse(source) catch {
+    error => raise Parse(error, source.to_owned())
+  }
+  @moonmon.to_string(value) catch {
+    error => raise Write(error)
+  }
+}
+
+///|
+fn format_source(source : StringView) -> String raise CliError {
+  let value = @moonmon.parse(source) catch {
+    error => raise Parse(error, source.to_owned())
+  }
+  @moonmon.to_string_pretty(value) catch {
+    error => raise Write(error)
+  }
 }
 
 ///|
@@ -61,7 +85,19 @@ fn run(args : Array[String]) -> Unit raise CliError {
       }
       println(parse_source(path, source))
     }
-    _ => raise Usage("expected `check <file>`")
+    ["compact", path] => {
+      let source = @fs.read_file_to_string(path) catch {
+        @fs.IOError(message) => raise Io(message)
+      }
+      println(compact_source(source))
+    }
+    ["format", path] => {
+      let source = @fs.read_file_to_string(path) catch {
+        @fs.IOError(message) => raise Io(message)
+      }
+      println(format_source(source))
+    }
+    _ => raise Usage("expected `check`, `compact`, or `format` with one file")
   }
 }
 

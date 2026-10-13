@@ -41,3 +41,10 @@ jobs:
           moon run cmd/mon -- check corpus/mon/scalars.mon
           moon run cmd/mon -- check corpus/mon/config.mon
           moon run cmd/mon -- check corpus/mon/services.mon
+
+      - name: MON round trip
+        run: |
+          moon run cmd/mon -- compact corpus/mon/config.mon > /tmp/config.mon
+          moon run cmd/mon -- check /tmp/config.mon
+          moon run cmd/mon -- format corpus/mon/services.mon > /tmp/services.mon
+          moon run cmd/mon -- check /tmp/services.mon

@@ -10,6 +10,10 @@
 - `cmd/mon` CLI with `check <file>` and `version` commands
 - MON fixtures under `corpus/mon`, plus `docs/MON.md` recording the literal
   mapping that was verified form by form against the MoonBit compiler
+- MON writer: `to_string` for the canonical compact form and
+  `to_string_pretty` for multiline output, both guaranteed to read back as an
+  equal value, with `MonWriteError` for the shapes the grammar cannot spell
+- `mon compact` and `mon format` commands in `cmd/mon`
 
 ### Changed
 

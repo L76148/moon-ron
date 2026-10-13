@@ -40,6 +40,14 @@ test "parses suffixed numbers with the MoonBit widths" {
 }
 
 ///|
+test "tolerates a byte order mark" {
+  assert_eq(
+    @mon.parse("\u{FEFF}42"),
+    @mon.MonValue::Number(@mon.MonNumber::Int(42)),
+  )
+}
+
+///|
 test "parses MoonBit escapes" {
   assert_eq(@mon.parse("'\\n'"), @mon.MonValue::Char('\n'))
   assert_eq(@mon.parse("'\\u{4E2D}'"), @mon.MonValue::Char('\u{4E2D}'))

@@ -31,4 +31,6 @@ moon run cmd/ron -- compact corpus/kitchen_sink.ron
 moon run cmd/mon -- check corpus/mon/scalars.mon
 moon run cmd/mon -- check corpus/mon/config.mon
 moon run cmd/mon -- check corpus/mon/services.mon
+moon run cmd/mon -- compact corpus/mon/config.mon
+moon run cmd/mon -- format corpus/mon/services.mon
 ```

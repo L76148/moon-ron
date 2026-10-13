@@ -43,14 +43,17 @@ reformatted with it before these checks were recorded.
 | --- | --- |
 | `moon check --deny-warn` | passed |
 | `moon check --deny-warn --target all` | passed |
-| `moon test --deny-warn` | 69 of 69 passed (49 RON, 20 MON) |
-| `moon test --deny-warn --target wasm` | 69 of 69 passed |
-| `moon test --deny-warn --target wasm-gc` | 69 of 69 passed |
+| `moon test --deny-warn` | 79 of 79 passed (49 RON, 20 MON reader, 10 MON writer) |
+| `moon test --deny-warn --target wasm` | 79 of 79 passed |
+| `moon test --deny-warn --target wasm-gc` | 79 of 79 passed |
 | `moon fmt --check` | passed |
 | `moon info` | interfaces generated for `mon` and `cmd/mon` |
 | `moon run cmd/mon -- check corpus/mon/scalars.mon` | `sequence of 19` |
 | `moon run cmd/mon -- check corpus/mon/config.mon` | `record Config with 14 fields` |
 | `moon run cmd/mon -- check corpus/mon/services.mon` | `sequence of 2` |
+| `moon run cmd/mon -- format corpus/mon/services.mon` | printed a multiline document |
+| `moon run cmd/mon -- compact corpus/mon/config.mon` | printed a canonical single-line document |
+| the printed forms re-parsed by `cmd/mon -- check` | parsed back to equal values |
 | a broken document through `cmd/mon` | printed `error: ... at line 3, column 3` with a caret and exited 1 |
 
 MON's accepted spellings are verified one by one against the MoonBit compiler
@@ -59,3 +62,4 @@ mapping together with the forms MoonBit rejects.
 
 GitHub Actions run `38406824588` (commit `6208d29`) completed successfully
 with the same release installed from the official one-line installer.
+

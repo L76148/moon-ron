@@ -127,7 +127,19 @@ priv struct MonLexer {
 
 ///|
 fn MonLexer::new(source : StringView) -> MonLexer {
-  { chars: source.to_array(), offset: 0, line: 1, column: 0, }
+  let lexer : MonLexer = {
+    chars: source.to_array(),
+    offset: 0,
+    line: 1,
+    column: 0,
+  }
+  // A byte order mark is written by some editors and carries no meaning for
+  // the document, so it is skipped before the first token.
+  match lexer.peek() {
+    Some('\u{FEFF}') => lexer.advance() |> ignore
+    _ => ()
+  }
+  lexer
 }
 
 ///|
